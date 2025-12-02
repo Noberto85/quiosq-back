@@ -33,10 +33,8 @@ public class SecurityConfiguration {
     };
 
     // Endpoints que requerem autenticação para serem acessados
-    private static final String[] ENDPOINTS_WITH_ADMIN_CUSTOMER = {
-        "/api/v1/convenios/**", "/api/v1/orcamentos/**",
-        "/api/v1/especialidades/**", "/api/v1/procedimentos/**", "/api/v1/itg/viacep/**",
-        "/api/v1/users/**"
+    private static final String[] ENDPOINTS_WITH_ADMIN = {
+        "/api/v1/qrcode/**"
     };
 
     @Bean
@@ -46,7 +44,7 @@ public class SecurityConfiguration {
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authoriza -> authoriza
-                .requestMatchers(ENDPOINTS_WITH_ADMIN_CUSTOMER).hasAnyRole(SYSTEM_ADMIN, ADMIN)
+                .requestMatchers(ENDPOINTS_WITH_ADMIN).hasAnyRole(SYSTEM_ADMIN, ADMIN)
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
