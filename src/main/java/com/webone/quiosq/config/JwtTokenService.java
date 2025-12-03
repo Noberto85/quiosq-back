@@ -84,7 +84,7 @@ public class JwtTokenService {
                 .withSubject(CLIENTE)
                 .withIssuer(ISSUER)
                 .withClaim(QUIOSQUE_ID, quiosqueId.toString())
-                .withClaim(ROLE, RoleName.ROLE_CLIENTE.name())
+                .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
                 .withClaim(MESA, mesaId)
                 .sign(algorithm);
 
