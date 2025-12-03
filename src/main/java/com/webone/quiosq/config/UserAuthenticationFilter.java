@@ -29,14 +29,13 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        final var token = recoveryToken(
-            request);
+        final var token = recoveryToken(request);
         if (token != null) {
             try {
 
                 String subject = jwtTokenService.getSubjectFromToken(
                     token);
-               var user = userRepository.findByEmail(subject);
+                var user = userRepository.findByEmail(subject);
 
                 if (user.isEmpty()) {
                     throw new UnauthorizedException("Unauthorizad");

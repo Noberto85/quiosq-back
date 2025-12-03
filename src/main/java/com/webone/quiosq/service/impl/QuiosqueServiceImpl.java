@@ -9,6 +9,7 @@ import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.QuiosqueService;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,19 +27,19 @@ public class QuiosqueServiceImpl implements QuiosqueService {
     }
 
     @Override
-    public QuiosqueResponse findById(Long id) {
+    public QuiosqueResponse findById(UUID id) {
         var prov = findByIdOpt(id);
         return mapper.convertValue(prov, QuiosqueResponse.class);
     }
 
     @Override
-    public Quiosque findByIdOpt(Long id) {
+    public Quiosque findByIdOpt(UUID id) {
         return repository.findById(id).orElseThrow(
             () -> new NotFoundException(ProvedorError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         final var byId = findById(id);
         repository.deleteById(byId.getId());
     }

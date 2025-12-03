@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @AllArgsConstructor
 @Builder
-    public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private User user;
 
@@ -21,9 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         return user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getNome().name()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(role -> new SimpleGrantedAuthority(role.getNome().name()))
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.webone.quiosq.entity.Role;
 import com.webone.quiosq.entity.User;
 import com.webone.quiosq.repository.RoleRepository;
 import com.webone.quiosq.repository.UserRepository;
+import com.webone.quiosq.service.QuiosqueService;
 import com.webone.quiosq.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 
 public class UserServiceImp implements UserService {
-
+    private final QuiosqueService quiosqueService;
     private final UserRepository userRepository;
     private final SecurityConfiguration securityConfiguration;
     private final RoleRepository roleRepository;
@@ -38,10 +39,11 @@ public class UserServiceImp implements UserService {
         if (role.isEmpty()) {
             throw new IllegalArgumentException("Role não encontrado");
         }
+        var quiosque = quiosqueService.findByIdOpt(createUserDto.quiosqueId());
         User newUser = User.builder()
             .email(createUserDto.email())
             .nome(createUserDto.nome())
-            // Codifica a senha do usuário com o algoritmo bcrypt
+            .quiosque(quiosque)
             .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
             .roles(List.of(role.get()))
             .build();

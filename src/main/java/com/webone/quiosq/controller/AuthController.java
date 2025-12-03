@@ -1,6 +1,5 @@
 package com.webone.quiosq.controller;
 
-import com.webone.quiosq.config.SecurityConfiguration;
 import com.webone.quiosq.controller.response.IdentifcacaoResponse;
 import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;

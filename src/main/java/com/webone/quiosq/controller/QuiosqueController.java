@@ -6,6 +6,7 @@ import com.webone.quiosq.controller.response.QuiosqueResponse;
 import com.webone.quiosq.service.QuiosqueService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class QuiosqueController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QuiosqueResponse> findById(@PathVariable("id") final Long id) {
+    public ResponseEntity<QuiosqueResponse> findById(@PathVariable("id") final UUID id) {
         return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
@@ -43,7 +44,7 @@ public class QuiosqueController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final UUID id) {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
