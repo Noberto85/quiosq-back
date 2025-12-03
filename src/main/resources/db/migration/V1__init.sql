@@ -11,7 +11,7 @@ CREATE TABLE quiosque (
 -- Tabela de roles
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(50) UNIQUE NOT NULL -- SYSTEM_ADMIN, ADMIN, GARCOM
+    nome VARCHAR(50) UNIQUE NOT NULL
 );
 
 -- Tabela de usuários
@@ -29,6 +29,67 @@ CREATE TABLE users_roles (
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     role_id INT REFERENCES roles(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
+);
+
+-- Tabela Garçom
+CREATE TABLE garcom (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    quiosque_id UUID,
+    CONSTRAINT fk_garcom_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id)
+);
+
+-- Tabela Mesa
+CREATE TABLE mesa (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    numero INT NOT NULL,
+    status VARCHAR(15) NOT NULL,
+    garcom_id BIGINT,
+    quiosque_id UUID,
+    CONSTRAINT fk_mesa_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id),
+    CONSTRAINT fk_mesa_garcom FOREIGN KEY (garcom_id) REFERENCES garcom(id)
+);
+
+-- Tabela Pedido
+CREATE TABLE pedido (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    status VARCHAR(30) NOT NULL,
+    mesa_id BIGINT,
+    quiosque_id UUID,
+    CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES mesa(id),
+    CONSTRAINT fk_pedido_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id)
+);
+
+CREATE TABLE categoria (
+    id BIGSERIAL PRIMARY KEY,
+    descricao VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE item_cardapio (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    imagem BYTEA,
+    url_imagem VARCHAR(255),
+    avaliacao INT,
+    categoria_id BIGINT NOT NULL,
+    quiosque_id UUID,
+    CONSTRAINT fk_cardapio_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id),
+    CONSTRAINT fk_cardapio_categoria FOREIGN KEY (categoria_id) REFERENCES categoria(id)
+);
+
+
+-- Tabela ItemPedido
+CREATE TABLE item_pedido (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    quantidade INT NOT NULL,
+    preco_unitario DECIMAL(10,2),
+    pedido_id BIGINT,
+    item_cardapio_id BIGINT,
+    CONSTRAINT fk_itempedido_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id),
+    CONSTRAINT fk_itempedido_cardapio FOREIGN KEY (item_cardapio_id) REFERENCES item_cardapio(id)
 );
 
 -- Índices úteis

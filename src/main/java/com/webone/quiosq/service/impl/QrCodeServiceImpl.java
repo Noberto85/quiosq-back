@@ -1,27 +1,51 @@
 package com.webone.quiosq.service.impl;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.webone.quiosq.config.JwtTokenService;
 import com.webone.quiosq.controller.response.QrCodeGenerateResponse;
-import com.webone.quiosq.service.JwtService;
-import com.webone.quiosq.service.QrCodeGeneratorService;
 import com.webone.quiosq.service.QrCodeService;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
 @Service
 public class QrCodeServiceImpl implements QrCodeService {
 
-    private final QrCodeGeneratorService service;
+    private final JwtTokenService jwtService;
 
-    private final JwtService jwtService;
+    private static final int WIDTH = 200;
+    private static final int HEIGHT = 200;
+    private static final String PNG = "PNG";
+
+    private final String frontUrl;
+
+    public QrCodeServiceImpl(JwtTokenService jwtService,
+        @Value("${front-url}") String frontUrl) {
+        this.jwtService = jwtService;
+        this.frontUrl = frontUrl;
+    }
 
     @Override
     public QrCodeGenerateResponse generateAndUploadQrCode(UUID quisoqueId, Long mesaId)
         throws WriterException, IOException {
-        jwtService.generateClientWithoutExpiration(quisoqueId,mesaId);
-        return service.generateAndUploadQrCode(String.format("?me=%s", jwtService.generateClientWithoutExpiration(quisoqueId,mesaId)));
+        return generateAndUploadQrCode(String.format("?me=%s", jwtService.generateClientWithoutExpiration(quisoqueId, mesaId)));
+    }
+
+    @Override
+    public QrCodeGenerateResponse generateAndUploadQrCode(String text)
+        throws WriterException, IOException {
+        String message = String.format("%s/%s", frontUrl, text);
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(message, BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, PNG, pngOutputStream);
+        byte[] pngQrCodeData = pngOutputStream.toByteArray();
+        return new QrCodeGenerateResponse(pngQrCodeData, message);
     }
 }

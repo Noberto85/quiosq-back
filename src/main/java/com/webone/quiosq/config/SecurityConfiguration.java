@@ -24,6 +24,7 @@ public class SecurityConfiguration {
     private static final String SYSTEM_ADMIN = "SYSTEM_ADMIN";
     private static final String ADMIN = "ADMIN";
     private static final String GARCOM = "GARCOM";
+    private static final String CLIENTE = "CLIENTE";
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {

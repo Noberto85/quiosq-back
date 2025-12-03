@@ -18,7 +18,9 @@ public class CodeErro {
 
         QUIOSQUE_NAO_ENCONTRADO(
             new CodeErro(-1001, "Quiosque não encontrado!", Constants.SEM_DETALHES,
-                HttpStatus.NOT_FOUND));
+                HttpStatus.NOT_FOUND)
+
+        );
 
         private final CodeErro codeErro;
 
@@ -28,6 +30,22 @@ public class CodeErro {
 
     }
 
+    @Getter
+    public enum QuiosqueError {
+
+        MESA_NAO_ENCONTRADO(
+            new CodeErro(-2001, "Mesa não encontrado!", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        );
+
+        private final CodeErro codeErro;
+
+        QuiosqueError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
 
 
     private static class Constants {
