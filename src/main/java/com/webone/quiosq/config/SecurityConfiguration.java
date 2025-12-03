@@ -28,14 +28,13 @@ public class SecurityConfiguration {
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-        "api/v1/auth",
         "/swagger-ui/**", "/swagger-ui/index.html","/actuator/**",
-        "/v3/api-docs/**"
+        "/v3/api-docs/**","/api/v1/qrcode/**","/api/v1/auth"
     };
 
     // Endpoints que requerem autenticação para serem acessados
     private static final String[] ENDPOINTS_WITH_ADMIN = {
-        "/api/v1/qrcode/**"
+
     };
 
     @Bean
@@ -47,7 +46,6 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authoriza -> authoriza
                 .requestMatchers(ENDPOINTS_WITH_ADMIN).hasAnyRole(SYSTEM_ADMIN, ADMIN)
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
                 .anyRequest().authenticated()
             )

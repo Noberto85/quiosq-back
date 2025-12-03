@@ -3,6 +3,7 @@ package com.webone.quiosq.exception.handler;
 
 import com.webone.quiosq.exception.MessageException;
 import com.webone.quiosq.exception.NotFoundException;
+import com.webone.quiosq.exception.UnauthorizedException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;

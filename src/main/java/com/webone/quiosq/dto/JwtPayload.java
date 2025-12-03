@@ -10,6 +10,6 @@ public class JwtPayload {
     private String subject;
     private Integer mesaId;// cliente
     private UUID quiosqueId;      // escopo do cliente
-
+    private String role;
 
 }

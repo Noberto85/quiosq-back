@@ -3,12 +3,11 @@ package com.webone.quiosq.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.interfaces.Claim;
 import com.webone.quiosq.dto.JwtPayload;
+import com.webone.quiosq.entity.enums.RoleName;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +20,11 @@ public class JwtTokenService {
 
     private static final String AMERICA_RECIFE = "America/Recife";
     private static final String ROLES = "Roles";
-    private static final String VISITANTE = "visitante";
+    private static final String CLIENTE = "CLIENTE";
     private static final String QUIOSQUE_ID = "quiosque_id";
     private static final String MESA = "mesa";
     private static final String SUB = "sub";
+    private static final String ROLE = "role";
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
@@ -56,12 +56,13 @@ public class JwtTokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
-                .withSubject(VISITANTE)
+                .withSubject(CLIENTE)
                 .withIssuer(ISSUER)
                 .withClaim(QUIOSQUE_ID, quiosqueId.toString())
+                .withClaim(ROLE, RoleName.ROLE_CLIENTE.name())
                 .withClaim(MESA, mesaId)
                 .sign(algorithm);
-
+            
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Erro ao gerar token.", exception);
         }
@@ -76,13 +77,11 @@ public class JwtTokenService {
             .build()
             .verify(token)
             .getSubject();
-
     }
 
     public JwtPayload parse(String token) {
         try {
-
-            Map<String, Claim> claims = JWT.require(Algorithm.HMAC256(secretKey))
+            final var claims = JWT.require(Algorithm.HMAC256(secretKey))
                 .withIssuer(ISSUER)
                 .build()
                 .verify(token)
@@ -91,6 +90,7 @@ public class JwtTokenService {
             JwtPayload p = new JwtPayload();
             p.setSubject(claims.get(SUB).asString());
             p.setMesaId(claims.get(MESA).asInt());
+            p.setRole(claims.get(ROLE).asString());
             p.setQuiosqueId(UUID.fromString(claims.get(QUIOSQUE_ID).asString()));
             return p;
         } catch (Exception e) {
