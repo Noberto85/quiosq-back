@@ -1,5 +1,5 @@
 -- Inserindo os valores padrão
-INSERT INTO roles (nome) VALUES ('ROLE_SYSTEM_ADMIN'),('ROLE_ADMIN'),('ROLE_GARCOM');
+INSERT INTO roles (nome) VALUES ('ROLE_SYSTEM_ADMIN'),('ROLE_ADMIN'),('ROLE_GARCOM'),('ROLE_CLIENTE');
 INSERT INTO users (email,nome, password) values('sys@admin','ROLE_SYSTEM_ADMIN','$2a$10$DwkRw2YuIMDEkCHxfXYz5uZb7mnYMghWAaJLpGRZC96or5HjD0QaO');
 
 INSERT INTO users_roles (role_id, user_id)

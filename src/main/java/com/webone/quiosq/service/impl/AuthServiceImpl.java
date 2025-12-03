@@ -1,9 +1,13 @@
 package com.webone.quiosq.service.impl;
 
 import com.webone.quiosq.config.JwtTokenService;
+import com.webone.quiosq.controller.response.IdentifcacaoResponse;
+import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.dto.LoginUserDto;
+import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
 import com.webone.quiosq.service.AuthService;
+import com.webone.quiosq.service.MesaService;
 import com.webone.quiosq.service.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +22,8 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenService jwtTokenService;
+
+    private final MesaService mesaService;
 
     // Método responsável por autenticar um usuário e retornar um token JWT
     @Override
@@ -35,5 +41,18 @@ public class AuthServiceImpl implements AuthService {
 
         // Gera um token JWT para o usuário autenticado
         return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+    }
+
+    @Override
+    public IdentifcacaoResponse buildIdentificacao(String token) {
+        IdentifcacaoResponse response = new IdentifcacaoResponse();
+        JwtPayload parse = jwtTokenService.parse(token);
+        MesaProjectionDto dto = mesaService.buildMesa(parse.getQuiosqueId(),
+            parse.getMesaId().longValue());
+        response.setMesa(dto.getMesa());
+        response.setQuiosque(dto.getQuiosque());
+        response.setGarcom(dto.getGarcom());
+        response.setQuiosqueId(dto.getQuiosqueId());
+        return response;
     }
 }
