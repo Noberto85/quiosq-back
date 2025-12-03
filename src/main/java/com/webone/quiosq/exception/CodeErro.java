@@ -46,6 +46,22 @@ public class CodeErro {
         }
 
     }
+    @Getter
+    public enum RoleError {
+
+            PERFIL_NAO_ENCONTRADO(
+            new CodeErro(-3001, "Perfil não encontrado!", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        );
+
+        private final CodeErro codeErro;
+
+        RoleError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
 
 
     private static class Constants {

@@ -1,10 +1,12 @@
 package com.webone.quiosq.controller;
 
 import com.webone.quiosq.controller.request.ClienteRequest;
+import com.webone.quiosq.service.ClienteService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ClienteController {
 
-    @PostMapping
-    public ResponseEntity<Void> createClient(@RequestBody ClienteRequest createUserDto,
-        Authentication authentication) {
+    private final ClienteService service;
 
+
+    @ApiResponses(value = {
+        @ApiResponse(description = "EndPoint para criação do cliente", responseCode = "201"),
+        @ApiResponse(description = "Erro de validação", responseCode = "400"),
+        @ApiResponse(description = "Erro interno do servidor", responseCode = "500")
+    })
+    @PostMapping
+    public ResponseEntity<Void> createClient(@RequestBody ClienteRequest createUserDto) {
+        service.save(createUserDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
