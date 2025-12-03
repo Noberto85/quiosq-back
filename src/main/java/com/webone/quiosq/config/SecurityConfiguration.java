@@ -37,6 +37,10 @@ public class SecurityConfiguration {
 
     };
 
+    private static final String[] ENDPOINTS_WITH_CLIENTE = {
+        "/api/v1/produto/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -45,6 +49,7 @@ public class SecurityConfiguration {
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authoriza -> authoriza
                 .requestMatchers(ENDPOINTS_WITH_ADMIN).hasAnyRole(SYSTEM_ADMIN, ADMIN)
+                .requestMatchers(ENDPOINTS_WITH_CLIENTE).hasAnyRole(CLIENTE)
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
                 .anyRequest().authenticated()

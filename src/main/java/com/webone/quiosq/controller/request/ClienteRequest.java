@@ -19,4 +19,8 @@ public class ClienteRequest {
     @NotNull(message = "O campo do quiosque não pode ser nulo")
     @NotEmpty(message = "Não pode ser vazio")
     private UUID quiosqueId;
+
+    @NotNull(message = "O campo do mesa não pode ser nulo")
+    @NotEmpty(message = "Não pode ser vazio")
+    private Integer mesa;
 }

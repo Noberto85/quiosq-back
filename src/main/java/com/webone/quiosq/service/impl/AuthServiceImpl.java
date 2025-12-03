@@ -2,6 +2,7 @@ package com.webone.quiosq.service.impl;
 
 import com.webone.quiosq.config.JwtTokenService;
 import com.webone.quiosq.controller.response.IdentifcacaoResponse;
+import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.MesaProjectionDto;
@@ -25,7 +26,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final MesaService mesaService;
 
-    // Método responsável por autenticar um usuário e retornar um token JWT
     @Override
     public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
         // Cria um objeto de autenticação com o email e a senha do usuário
@@ -41,6 +41,11 @@ public class AuthServiceImpl implements AuthService {
 
         // Gera um token JWT para o usuário autenticado
         return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+    }
+
+    @Override
+    public RecoveryJwtTokenDto authenticateClient(ClientDetails clientDetails) {
+        return new RecoveryJwtTokenDto(jwtTokenService.generateTokenClient(clientDetails));
     }
 
     @Override
