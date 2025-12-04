@@ -45,7 +45,6 @@ public class JwtTokenService {
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDate())
                 .withSubject(user.getUsername())
-
                 .withClaim(ROLES, user.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList())
@@ -63,7 +62,7 @@ public class JwtTokenService {
             return JWT.create()
                 .withIssuer(ISSUER)
                 .withIssuedAt(creationDate())
-                .withExpiresAt(expirationDate())
+                .withExpiresAt(expirationDateClient())
                 .withSubject(user.getTelefone())
                 .withClaim(NOME, user.getNome())
                 .withClaim(MESA, user.getMesa())
@@ -93,19 +92,8 @@ public class JwtTokenService {
         }
     }
 
-
-    public String getSubjectFromToken(String token) {
-
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        return JWT.require(algorithm)
-            .withIssuer(ISSUER)
-            .build()
-            .verify(token)
-            .getSubject();
-    }
-
     public JwtPayload parse(String token) {
-        try {
+
             final var claims = JWT.require(Algorithm.HMAC256(secretKey))
                 .withIssuer(ISSUER)
                 .build()
@@ -125,10 +113,7 @@ public class JwtTokenService {
             }
 
             return p;
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            return null;
-        }
+
     }
 
     private Instant creationDate() {
@@ -136,6 +121,10 @@ public class JwtTokenService {
     }
 
     private Instant expirationDate() {
+        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(8).toInstant();
+    }
+
+    private Instant expirationDateClient() {
         return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(1).toInstant();
     }
 
