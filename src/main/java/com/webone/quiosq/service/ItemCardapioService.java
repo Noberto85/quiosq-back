@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface ItemCardapioService {
 
-    PageableDto<ItemCardapioResponse> findAllByPageableSpec( UUID quisoqueId,Specification<ItemCardapio> spec,
+    PageableDto<ItemCardapioResponse> findAllByPageableSpec(Specification<ItemCardapio> spec,
         Integer page, Integer size,
         String orderBy,
         String direction);

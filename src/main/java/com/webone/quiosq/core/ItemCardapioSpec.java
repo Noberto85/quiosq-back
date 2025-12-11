@@ -9,6 +9,7 @@ public class ItemCardapioSpec {
 
     private static final String NOME = "nome";
     private static final String QUIOSQUE = "quiosque";
+    private static final String CATEGORIA = "categoria";
 
     public static Specification<ItemCardapio> nomeContains(String nome) {
 
@@ -27,8 +28,18 @@ public class ItemCardapioSpec {
             if (ObjectUtils.isEmpty(quiosqueId)) {
                 return null;
             }
-            // acessa o campo "quiosque" e dentro dele o "id"
+
             return builder.equal(root.get(QUIOSQUE).get("id"), quiosqueId);
+        };
+    }
+
+    public static Specification<ItemCardapio> equalCategoria(String categoria) {
+
+        return (root, query, builder) -> {
+            if (ObjectUtils.isEmpty(categoria)) {
+                return null;
+            }
+            return builder.equal(root.get(CATEGORIA).get("descricao"), categoria);
         };
     }
 

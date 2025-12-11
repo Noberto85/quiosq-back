@@ -42,7 +42,7 @@ public class ItemCardapio {
 
     private String urlImagem;
 
-    private Integer avaliacao;
+        private Integer avaliacao;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)

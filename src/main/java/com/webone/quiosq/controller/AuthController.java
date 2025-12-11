@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,11 +25,10 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(
         @RequestBody LoginUserDto loginUserDto) {
-
         return new ResponseEntity<>(authService.authenticateUser(loginUserDto), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/refresh_token", method = RequestMethod.POST)
+    @GetMapping("/refresh_token")
     public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
 
         // String token = JWTUtil.generateToken(usuaioAutenticado.getEmail());

@@ -22,7 +22,7 @@ public class ItemCardapioServiceImpl implements ItemCardapioService {
     private final ObjectMapper mapper;
 
     @Override
-    public PageableDto<ItemCardapioResponse> findAllByPageableSpec(UUID quisoqueId,
+    public PageableDto<ItemCardapioResponse> findAllByPageableSpec(
         Specification<ItemCardapio> spec,
         Integer page, Integer size, String orderBy, String direction) {
         final var pageRequest = PageRequest.of(page, size,

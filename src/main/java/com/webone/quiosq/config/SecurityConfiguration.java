@@ -3,7 +3,6 @@ package com.webone.quiosq.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -29,7 +28,7 @@ public class SecurityConfiguration {
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
-        "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/auth", "/api/v1/cliente"
+        "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/cliente", "/api/v1/auth/**"
     };
 
     // Endpoints que requerem autenticação para serem acessados
@@ -48,10 +47,8 @@ public class SecurityConfiguration {
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authoriza -> authoriza
-                .requestMatchers(ENDPOINTS_WITH_ADMIN).hasAnyRole(SYSTEM_ADMIN)
-                .requestMatchers(HttpMethod.GET, ENDPOINTS_CLIENTE_ADMIN).hasAnyRole(ADMIN, CLIENTE)
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
+                .requestMatchers(ENDPOINTS_CLIENTE_ADMIN).hasAnyRole(ADMIN, CLIENTE)
                 .anyRequest().authenticated()
             )
             .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

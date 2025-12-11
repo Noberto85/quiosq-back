@@ -36,7 +36,6 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         final var token = recoveryToken(request);
-
         if (token != null) {
             try {
 

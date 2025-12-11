@@ -17,7 +17,7 @@ public class ItemCardapioResponse {
     private String urlImagem;
     private Integer avaliacao;
     private String categoria;
-    private UUID quiosqueId;
+
 
     public ItemCardapioResponse(ItemCardapio itemCardapio) {
         this.id = itemCardapio.getId();
@@ -27,7 +27,6 @@ public class ItemCardapioResponse {
         this.imagem = itemCardapio.getImagem();
         this.urlImagem = itemCardapio.getUrlImagem();
         this.avaliacao = itemCardapio.getAvaliacao();
-        this.categoria = itemCardapio.getDescricao();
-        this.quiosqueId = itemCardapio.getQuiosque().getId();
+        this.categoria = itemCardapio.getCategoria().getDescricao();
     }
 }
