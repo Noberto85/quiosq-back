@@ -5,7 +5,7 @@ COPY pom.xml /app
 WORKDIR /app
 RUN mvn clean install -DskipTests
 
-FROM openjdk:17
+FROM eclipse-temurin:17-jre
 
 ARG PROFILE
 ARG PROFILE_ARG
