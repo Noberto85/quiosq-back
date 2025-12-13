@@ -1,57 +1,60 @@
 package com.webone.quiosq.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "item_cardapio")
+@Table(name = "cliente")
+@Entity()
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ItemCardapio {
+public class Cliente implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6695383790847736493L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
+    private String telefone;
+
+    @Column(nullable = false)
     private String nome;
-    @Column(nullable = false)
-    private String descricao;
-    @Column(nullable = false)
-    private BigDecimal preco;
-    @Lob
-    private byte[] imagem;
 
-    private String urlImagem;
+    private LocalDateTime dataAcesso;
 
-        private Integer avaliacao;
+    private LocalDateTime ultimoAcesso;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "quiosque_id")
-    @JsonBackReference
+    @JoinColumn(name = "quiosque_id", nullable = false)
     private Quiosque quiosque;
 
+    @PrePersist
+    public void prePersist() {
+        this.dataAcesso = LocalDateTime.now();
+    }
 
 }

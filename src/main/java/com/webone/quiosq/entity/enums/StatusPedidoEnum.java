@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum StatusPedidoEnum {
-    RECEBIDO("Pedido recebido"),
+    AGUARDANDO_PAGAMENTO("Aguardando Pagamento"),
     EM_PREPARACAO("Em preparação"),
     PRONTO("Pronto para retirada/entrega"),
     ENTREGUE("Entregue ao cliente"),

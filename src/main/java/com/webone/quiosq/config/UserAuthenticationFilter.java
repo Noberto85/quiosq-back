@@ -1,6 +1,7 @@
 package com.webone.quiosq.config;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.exception.UnauthorizedException;
 import com.webone.quiosq.repository.UserRepository;
 import com.webone.quiosq.service.UserDetailsImpl;
@@ -9,9 +10,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,25 +36,31 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         final var token = recoveryToken(request);
-
         if (token != null) {
             try {
 
-                String subject = jwtTokenService.getSubjectFromToken(
+                JwtPayload subject = jwtTokenService.parse(
                     token);
-                var user = userRepository.findByEmail(subject);
+                if (Objects.isNull(subject.getRole())) {
+                    var user = userRepository.findByEmail(subject.getSubject());
 
-                if (user.isEmpty()) {
-                    throw new UnauthorizedException("Unauthorizad");
+                    if (user.isEmpty()) {
+                        throw new UnauthorizedException("Unauthorizad");
+                    }
+
+                    UserDetailsImpl userDetails = UserDetailsImpl.builder().user(user.get())
+                        .build();
+
+                    autentication(userDetails.getUsername(), userDetails.getAuthorities());
                 }
 
-                UserDetailsImpl userDetails = UserDetailsImpl.builder().user(user.get())
-                    .build();
+                if (Objects.nonNull(subject.getRole())) {
 
-                Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null,
-                        userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    autentication(subject.getSubject(),
+                        Collections.singleton(new SimpleGrantedAuthority(subject.getRole()))
+                    );
+                }
+
 
             } catch (TokenExpiredException ex) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -59,6 +71,14 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private static void autentication(String userName,
+        Collection<? extends GrantedAuthority> authorities) {
+        Authentication authentication =
+            new UsernamePasswordAuthenticationToken(userName, null,
+                authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String recoveryToken(HttpServletRequest request) {

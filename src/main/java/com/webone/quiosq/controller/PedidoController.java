@@ -1,8 +1,9 @@
 package com.webone.quiosq.controller;
 
-import com.webone.quiosq.controller.request.ClienteRequest;
+
+import com.webone.quiosq.controller.request.PedidoRequest;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
-import com.webone.quiosq.service.ClienteService;
+import com.webone.quiosq.service.PedidoService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/cliente")
+@RequestMapping("/api/v1/pedido")
 @AllArgsConstructor
-public class ClienteController {
+public class PedidoController {
 
-    private final ClienteService service;
+    private final PedidoService service;
 
     @ApiResponses(value = {
         @ApiResponse(description = "EndPoint para criação do cliente", responseCode = "201"),
@@ -26,9 +27,9 @@ public class ClienteController {
         @ApiResponse(description = "Erro interno do servidor", responseCode = "500")
     })
     @PostMapping
-    public ResponseEntity<RecoveryJwtTokenDto> createClientAndToken(
-        @RequestBody ClienteRequest createUserDto) {
-        return new ResponseEntity<>(service.save(createUserDto), HttpStatus.OK);
+    public ResponseEntity<?> createClientAndToken(
+        @RequestBody PedidoRequest createUserDto) {
+        service.createPedido(createUserDto);
+        return ResponseEntity.noContent().build();
     }
-
 }

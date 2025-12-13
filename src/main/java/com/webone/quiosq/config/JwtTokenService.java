@@ -3,11 +3,15 @@ package com.webone.quiosq.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.entity.enums.RoleName;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +29,7 @@ public class JwtTokenService {
     private static final String MESA = "mesa";
     private static final String SUB = "sub";
     private static final String ROLE = "role";
+    private static final String NOME = "nome";
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
@@ -51,6 +56,25 @@ public class JwtTokenService {
         }
     }
 
+    public String generateTokenClient(ClientDetails user) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            return JWT.create()
+                .withIssuer(ISSUER)
+                .withIssuedAt(creationDate())
+                .withExpiresAt(expirationDateClient())
+                .withSubject(user.getTelefone())
+                .withClaim(NOME, user.getNome())
+                .withClaim(MESA, user.getMesa())
+                .withClaim(QUIOSQUE_ID, user.getQuiosqueId().toString())
+                .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
+                .sign(algorithm);
+
+        } catch (JWTCreationException exception) {
+            throw new JWTCreationException("Erro ao gerar token.", exception);
+        }
+    }
+
 
     public String generateClientWithoutExpiration(UUID quiosqueId, Long mesaId) {
         try {
@@ -59,44 +83,37 @@ public class JwtTokenService {
                 .withSubject(CLIENTE)
                 .withIssuer(ISSUER)
                 .withClaim(QUIOSQUE_ID, quiosqueId.toString())
-                .withClaim(ROLE, RoleName.ROLE_CLIENTE.name())
+                .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
                 .withClaim(MESA, mesaId)
                 .sign(algorithm);
-            
+
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Erro ao gerar token.", exception);
         }
     }
 
-
-    public String getSubjectFromToken(String token) {
-
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        return JWT.require(algorithm)
-            .withIssuer(ISSUER)
-            .build()
-            .verify(token)
-            .getSubject();
-    }
-
     public JwtPayload parse(String token) {
-        try {
+
             final var claims = JWT.require(Algorithm.HMAC256(secretKey))
                 .withIssuer(ISSUER)
                 .build()
                 .verify(token)
                 .getClaims();
+            List<String> roles = claims.get(ROLES).asList(String.class);
 
             JwtPayload p = new JwtPayload();
-            p.setSubject(claims.get(SUB).asString());
-            p.setMesaId(claims.get(MESA).asInt());
-            p.setRole(claims.get(ROLE).asString());
-            p.setQuiosqueId(UUID.fromString(claims.get(QUIOSQUE_ID).asString()));
+            if (roles.contains(RoleName.ROLE_CLIENTE.name())) {
+                p.setSubject(claims.get(SUB).asString());
+                p.setMesaId(claims.get(MESA).asInt());
+                p.setRole(roles.get(0));
+                p.setQuiosqueId(UUID.fromString(claims.get(QUIOSQUE_ID).asString()));
+            }
+            if (!roles.contains(RoleName.ROLE_CLIENTE.name())) {
+                p.setSubject(claims.get(SUB).asString());
+            }
+
             return p;
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            return null;
-        }
+
     }
 
     private Instant creationDate() {
@@ -104,6 +121,10 @@ public class JwtTokenService {
     }
 
     private Instant expirationDate() {
+        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(8).toInstant();
+    }
+
+    private Instant expirationDateClient() {
         return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(1).toInstant();
     }
 
