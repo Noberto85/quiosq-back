@@ -47,6 +47,7 @@ CREATE TABLE mesa (
     status VARCHAR(15) NOT NULL,
     garcom_id BIGINT,
     quiosque_id UUID,
+	  UNIQUE(numero,quiosque_id),
     CONSTRAINT fk_mesa_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id),
     CONSTRAINT fk_mesa_garcom FOREIGN KEY (garcom_id) REFERENCES garcom(id)
 );
@@ -57,6 +58,8 @@ CREATE TABLE pedido (
     status VARCHAR(30) NOT NULL,
     mesa_id BIGINT,
     quiosque_id UUID,
+    data_init TIMESTAMP  NOT NULL,
+    data_fim TIMESTAMP,
     CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES mesa(id),
     CONSTRAINT fk_pedido_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id)
 );
