@@ -1,15 +1,4 @@
-
-SET TIMEZONE TO 'America/Sao_Paulo';
-
-CREATE TABLE contador_pedido_quiosque (
-    quiosque_id UUID PRIMARY KEY,
-    valor INT NOT NULL
-);
-
-CREATE TYPE item_pedido_type AS (
-    item_id INTEGER,
-    quantidade INTEGER
-);
+DROP PROCEDURE create_pedido;
 
 CREATE OR REPLACE PROCEDURE create_pedido(
     IN quiosque_in UUID,
@@ -41,7 +30,7 @@ BEGIN
     -- Verifica mesa
     SELECT id INTO mesaId
     FROM mesa
-    WHERE id = mesa_in AND quiosque_id = quiosque_in;
+    WHERE numero = mesa_in AND quiosque_id = quiosque_in;
 
     IF quiosqueId IS NULL OR mesaId IS NULL THEN
         RAISE EXCEPTION 'MESA OU QUIOSQUE NÃO ENCONTRADO';
@@ -74,5 +63,3 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
-
-

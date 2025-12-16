@@ -3,6 +3,7 @@ package com.webone.quiosq.exception.handler;
 
 import com.webone.quiosq.exception.MessageException;
 import com.webone.quiosq.exception.NotFoundException;
+import com.webone.quiosq.exception.SqlException;
 import com.webone.quiosq.exception.UnauthorizedException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,17 @@ public class ControllerExpectionHandler {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(SqlException.class)
+    public ResponseEntity<?> notFound(SqlException ex) {
+        final var builder = MessageException.builder()
+            .cod(ex.getCode())
+            .details(ex.getDetail())
+            .message(ex.getMessage())
+            .status(ex.getHttpStatus())
+            .build();
+        return ResponseEntity.status(ex.getHttpStatus()).body(builder);
     }
 
 }

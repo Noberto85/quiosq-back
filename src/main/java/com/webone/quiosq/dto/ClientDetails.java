@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientDetails {
+    private Long clienteId;
     private String nome;
     private String telefone;
     private UUID quiosqueId;

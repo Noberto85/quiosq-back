@@ -34,7 +34,7 @@ public class QrCodeServiceImpl implements QrCodeService {
     @Override
     public QrCodeGenerateResponse generateAndUploadQrCode(UUID quisoqueId, Long mesaId)
         throws WriterException, IOException {
-        return generateAndUploadQrCode(String.format("?me=%s", jwtService.generateClientWithoutExpiration(quisoqueId, mesaId)));
+        return generateAndUploadQrCode(String.format("login/%s", jwtService.generateClientWithoutExpiration(quisoqueId, mesaId)));
     }
 
     @Override

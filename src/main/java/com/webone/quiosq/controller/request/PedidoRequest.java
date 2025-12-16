@@ -12,7 +12,7 @@ public class PedidoRequest {
 
     private UUID quiosqueId;
     private Integer mesa;
-    private Integer clienteId;
+    private String telefone;
     private List<ItemDTO> items;
     private PaymentDTO payment;
     private BigDecimal total;

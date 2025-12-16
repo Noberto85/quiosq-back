@@ -5,7 +5,14 @@ CREATE TABLE cliente (
     data_acesso TIMESTAMP,
     ultimo_acesso TIMESTAMP,
     role_id BIGINT NOT NULL,
+    CONSTRAINT fk_cliente_role FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE cliente_quiosque (
+    cliente_id BIGINT NOT NULL,
     quiosque_id UUID NOT NULL,
-    CONSTRAINT fk_cliente_role FOREIGN KEY (role_id) REFERENCES roles(id),
-    CONSTRAINT fk_cliente_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id)
+    data_ultimo_acesso TIMESTAMP,
+    PRIMARY KEY (cliente_id, quiosque_id),
+    CONSTRAINT fk_cq_cliente FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE,
+    CONSTRAINT fk_cq_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id) ON DELETE CASCADE
 );

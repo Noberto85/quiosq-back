@@ -56,6 +56,7 @@ CREATE TABLE mesa (
 CREATE TABLE pedido (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     status VARCHAR(30) NOT NULL,
+    codigo VARCHAR(5) NOT NULL,
     mesa_id BIGINT,
     quiosque_id UUID,
     data_init TIMESTAMP  NOT NULL,
@@ -88,12 +89,13 @@ CREATE TABLE item_cardapio (
 CREATE TABLE item_pedido (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     quantidade INT NOT NULL,
-    preco_unitario DECIMAL(10,2),
+    valor_soma DECIMAL(10,2),
     pedido_id BIGINT,
     item_cardapio_id BIGINT,
     CONSTRAINT fk_itempedido_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id),
     CONSTRAINT fk_itempedido_cardapio FOREIGN KEY (item_cardapio_id) REFERENCES item_cardapio(id)
 );
+
 
 -- Índices úteis
 CREATE INDEX idx_users_quiosque ON users(quiosque_id);

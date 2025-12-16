@@ -11,7 +11,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtTokenService {
 
-    private static final String AMERICA_RECIFE = "America/Recife";
+    private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
     private static final String ROLES = "Roles";
     private static final String CLIENTE = "CLIENTE";
     private static final String QUIOSQUE_ID = "quiosque_id";
     private static final String MESA = "mesa";
     private static final String SUB = "sub";
-    private static final String ROLE = "role";
     private static final String NOME = "nome";
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
@@ -117,15 +115,15 @@ public class JwtTokenService {
     }
 
     private Instant creationDate() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).toInstant();
     }
 
     private Instant expirationDate() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(8).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).plusHours(8).toInstant();
     }
 
     private Instant expirationDateClient() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(1).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).plusHours(1).toInstant();
     }
 
 }

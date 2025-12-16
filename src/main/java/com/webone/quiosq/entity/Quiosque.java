@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +33,9 @@ public class Quiosque {
 
     @Column(unique = true, nullable = false)
     private String cnpj;
+
+    @ManyToMany(mappedBy = "quiosques")
+    private Set<Cliente> clientes;
+
 
 }

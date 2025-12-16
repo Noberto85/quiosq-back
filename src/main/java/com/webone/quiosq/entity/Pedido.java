@@ -38,6 +38,9 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedidoEnum status;
 
+    @Column(nullable = false)
+    private String codigo;
+
     @ManyToOne
     @JoinColumn(name = "mesa_id")
     private Mesa mesa;
