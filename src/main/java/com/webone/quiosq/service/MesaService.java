@@ -7,4 +7,6 @@ public interface MesaService {
 
     MesaProjectionDto buildMesa(UUID quiosqueId, Long mesaId);
 
+    Long findByQuiosqueAndMesa(UUID quiosqueId, Integer numero);
+
 }

@@ -14,4 +14,8 @@ public interface MesaRepository extends JpaRepository<Mesa, Long> {
     Optional<MesaInfoProjection> getMesaInfo(@Param("quiosqueId") UUID quiosqueId,
         @Param("mesaId") Long mesaId);
 
+    @Query("SELECT m.id FROM Mesa m INNER JOIN m.quiosque qui WHERE  m.numero =:numero and qui.id =:quiosqueId ")
+    Optional<Long> getID(@Param("quiosqueId") UUID quiosqueId,@Param("numero") Integer numero);
+
+
 }

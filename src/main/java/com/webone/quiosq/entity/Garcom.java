@@ -29,7 +29,8 @@ public class Garcom {
     private String nome;
     @Column(nullable = false)
     private String cpf;
-    private byte[] foto;
+
+  //  private byte[] foto;
     @ManyToOne
     @JoinColumn(name = "quiosque_id")
     private Quiosque quiosque;

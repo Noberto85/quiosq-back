@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         IdentifcacaoResponse response = new IdentifcacaoResponse();
         JwtPayload parse = jwtTokenService.parse(token);
         MesaProjectionDto dto = mesaService.buildMesa(parse.getQuiosqueId(),
-            parse.getMesaId().longValue());
+            parse.getMesaId());
         response.setMesa(dto.getMesa());
         response.setQuiosque(dto.getQuiosque());
         response.setGarcom(dto.getGarcom());

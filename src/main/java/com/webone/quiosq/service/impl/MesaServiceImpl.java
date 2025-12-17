@@ -25,4 +25,11 @@ public class MesaServiceImpl implements MesaService {
         return new MesaProjectionDto(mesaInfo);
 
     }
+
+    @Override
+    public Long findByQuiosqueAndMesa(UUID quiosqueId, Integer numero) {
+       return mesaRepository.getID(quiosqueId, numero).orElseThrow(() -> new NotFoundException(
+           QuiosqueError.MESA_NAO_ENCONTRADO.getCodeErro()));
+
+    }
 }

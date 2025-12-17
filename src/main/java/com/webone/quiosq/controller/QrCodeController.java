@@ -20,13 +20,13 @@ public class QrCodeController {
 
     private final QrCodeService service;
 
-    @GetMapping("/{mesaId}/{quiosqueId}")
+    @GetMapping("/{numeroMesa}/{quiosqueId}")
     public ResponseEntity<QrCodeGenerateResponse> create(
-        @PathVariable("mesaId") Long mesaId,
+        @PathVariable("numeroMesa") Integer numeroMesa,
         @PathVariable("quiosqueId") UUID quiosqueId)
         throws IOException, WriterException {
         return new ResponseEntity<>(
-            service.generateAndUploadQrCode(quiosqueId, mesaId),
+            service.generateAndUploadQrCode(quiosqueId, numeroMesa),
             HttpStatus.CREATED);
     }
 }
