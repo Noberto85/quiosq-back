@@ -20,8 +20,8 @@ public class TokenController {
 
     @GetMapping("/token")
     public RedirectView authenticateUser(@RequestParam("code") String code) {
-        service.createUserQuisqu(code);
-        return new RedirectView("/success.html");
+       return service.createUserQuisqu(code);
+
     }
 
 }

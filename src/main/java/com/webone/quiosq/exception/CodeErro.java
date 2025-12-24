@@ -37,6 +37,11 @@ public class CodeErro {
             new CodeErro(-2001, "Mesa não encontrado!", Constants.SEM_DETALHES,
                 HttpStatus.NOT_FOUND)
 
+        ),
+        QUIOSQUE_NAO_ENCONTRADO(
+            new CodeErro(-2002, "Quiosque não encontrado", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
         );
 
         private final CodeErro codeErro;
@@ -58,6 +63,40 @@ public class CodeErro {
         private final CodeErro codeErro;
 
         RoleError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
+    @Getter
+    public enum AuthError {
+
+        AUTH_ERROR(
+            new CodeErro(-4001, "Autenticação não realizada!", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        AuthError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
+    @Getter
+    public enum PedidoError {
+
+        PEDIDO_ERROR(
+            new CodeErro(-5001, "Pedido não encotrado", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        PedidoError(CodeErro codeErro) {
             this.codeErro = codeErro;
         }
 

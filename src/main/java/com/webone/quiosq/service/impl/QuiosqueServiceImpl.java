@@ -8,6 +8,7 @@ import com.webone.quiosq.exception.CodeErro.ProvedorError;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.QuiosqueService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,8 +23,8 @@ public class QuiosqueServiceImpl implements QuiosqueService {
     private final ObjectMapper mapper;
 
     @Override
-    public void save(QuiosqueRequest request) {
-        repository.save(mapper.convertValue(request, Quiosque.class));
+    public Quiosque save(QuiosqueRequest request) {
+        return repository.save(mapper.convertValue(request, Quiosque.class));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.webone.quiosq.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.webone.quiosq.dto.ItemDTO;
 import com.webone.quiosq.dto.PaymentDTO;
 import java.math.BigDecimal;
@@ -14,7 +15,11 @@ public class PedidoRequest {
     private Integer mesa;
     private String clienteId;
     private List<ItemDTO> items;
-    private PaymentDTO payment;
+    private PaymentDTO pagamento;
     private BigDecimal total;
+    @JsonIgnoreProperties
+    private String codePedido;
+    @JsonIgnoreProperties
+    private Long PedidoId;
 
 }

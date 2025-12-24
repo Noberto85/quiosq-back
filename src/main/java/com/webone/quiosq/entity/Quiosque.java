@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -30,6 +29,10 @@ public class Quiosque {
     private UUID id;
 
     private String nome;
+
+    private String telefone;
+
+    private String email;
 
     @Column(unique = true, nullable = false)
     private String cnpj;

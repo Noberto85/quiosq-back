@@ -1,6 +1,7 @@
 package com.webone.quiosq.exception.handler;
 
 
+import com.webone.quiosq.exception.LoginException;
 import com.webone.quiosq.exception.MessageException;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.exception.SqlException;
@@ -56,10 +57,15 @@ public class ControllerExpectionHandler {
         return ResponseEntity.status(ex.getHttpStatus()).body(builder);
     }
 
-    @ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity<?> notFound(HttpClientErrorException ex) {
-        System.out.println("");
-        return null;
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<?> notFound(LoginException ex) {
+        final var builder = MessageException.builder()
+            .cod(ex.getCode())
+            .details(ex.getDetail())
+            .message(ex.getMensagem())
+            .status(ex.getHttpStatus())
+            .build();
+        return ResponseEntity.status(ex.getHttpStatus()).body(builder);
     }
 
 }

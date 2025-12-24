@@ -4,7 +4,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.exception.UnauthorizedException;
 import com.webone.quiosq.repository.UserRepository;
-import com.webone.quiosq.service.UserDetailsImpl;
+import com.webone.quiosq.service.impl.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,8 @@
 package com.webone.quiosq.service;
 
+import org.springframework.web.servlet.view.RedirectView;
+
 public interface TokenService {
 
-    void createUserQuisqu(String code);
+    RedirectView createUserQuisqu(String code);
 }

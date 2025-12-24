@@ -3,8 +3,11 @@ package com.webone.quiosq.itg.impl;
 
 import com.webone.quiosq.dto.HeaderApi;
 import com.webone.quiosq.itg.MercadoApiService;
+import com.webone.quiosq.itg.request.PixRequest;
 import com.webone.quiosq.itg.response.OAuthTokenResponse;
+import com.webone.quiosq.itg.response.PixResponse;
 import com.webone.quiosq.itg.response.UserDTO;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +28,9 @@ public class MercadoPagoApi implements MercadoApiService {
     private static final String CODE = "code";
     private static final String REDIRECT_URI = "redirect_uri";
     public static final String AUTHORIZATION_CODE = "authorization_code";
-    private final String PATH_USERS = "/users/me";
-    private final String PATH_AUTH_TOKEN = "/oauth/token";
+    private final String PATH_USERS = "users/me";
+    private final String PATH_AUTH_TOKEN = "oauth/token";
+    private final String PATH_AUTH_PAYMENT = "v1/payments";
     private final RestTemplate restTemplate;
 
     private final String urlBase;
@@ -47,11 +51,20 @@ public class MercadoPagoApi implements MercadoApiService {
     }
 
     @Override
-    public UserDTO getAuthToken(String code) {
-        var res = post(buidForm(code), PATH_AUTH_TOKEN, OAuthTokenResponse.class);
+    public UserDTO getAuthToken(String accessToken) {
         HeaderApi headerApi = new HeaderApi();
-        headerApi.setToken(res.getAccess_token());
+        headerApi.setToken(accessToken);
         return get(PATH_USERS, headerApi, UserDTO.class);
+    }
+
+    @Override
+    public OAuthTokenResponse getAutorizationDetails(String code) {
+        return post(buidForm(code), PATH_AUTH_TOKEN, OAuthTokenResponse.class);
+    }
+
+    @Override
+    public PixResponse createPix(String acessToken, String idempotencyKey, PixRequest request) {
+        return post(idempotencyKey, acessToken, request, PATH_AUTH_PAYMENT, PixResponse.class);
     }
 
     private <OUT> OUT get(String path, HeaderApi headerApi, Class<OUT> responseType) {
@@ -83,6 +96,30 @@ public class MercadoPagoApi implements MercadoApiService {
             responseType
         );
         return response.getBody();
+    }
+
+    public <OUT, IN extends BaserRequest> OUT post(String idempotencyKey, String acessToken, IN body,
+        String path,
+        Class<OUT> responseType) {
+        String url = String.format("%s/%s", urlBase, path);
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(acessToken);
+            headers.add("X-Idempotency-Key", idempotencyKey);
+            HttpEntity<BaserRequest> request = new HttpEntity<>(body, headers);
+
+            ResponseEntity<OUT> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                responseType
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private MultiValueMap<String, String> buidForm(String code) {
