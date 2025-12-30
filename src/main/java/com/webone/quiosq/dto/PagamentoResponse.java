@@ -18,8 +18,8 @@ public class PagamentoResponse {
     private LocalDateTime dateLastUpdated;
     private LocalDateTime dateOfExpiration;
 
-    public PagamentoResponse(PagamentoApiResponse res, Long pedidoId) {
-        this.id = pedidoId;
+    public PagamentoResponse(PagamentoApiResponse res, Long pagamentoId) {
+        this.id = pagamentoId;
         this.status = res.getStatus();
         this.qrCode = res.getPointOfInteraction().getTransactionData().getQrCode();
         this.valor = res.getTransactionAmount();

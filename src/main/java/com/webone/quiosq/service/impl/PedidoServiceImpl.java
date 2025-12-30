@@ -11,7 +11,6 @@ import com.webone.quiosq.exception.CodeErro.RoleError;
 import com.webone.quiosq.exception.SqlException;
 import com.webone.quiosq.handler.PagamentoHandle;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
-import com.webone.quiosq.itg.response.TransacaoDetais;
 import com.webone.quiosq.projection.PedidoProjection;
 import com.webone.quiosq.repository.PedidoRepository;
 import com.webone.quiosq.service.MercadoPagoTokenService;
@@ -60,10 +59,10 @@ public class PedidoServiceImpl implements PedidoService {
                 PagamentoHandle next = iterator.next();
                 pagamentoResponse = next.handleRequest(request, accessToken);
                 Optional<Pedido> byId = pedidoRepository.findById(pedido.get().getPedidoId());
-                pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
+                var pag = pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
+                return new PagamentoResponse(pagamentoResponse, pag.getId());
             }
-            return new PagamentoResponse(pagamentoResponse, request.getPedidoId());
-
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new SqlException(RoleError.PERFIL_NAO_ENCONTRADO.getCodeErro(), e.getMessage());

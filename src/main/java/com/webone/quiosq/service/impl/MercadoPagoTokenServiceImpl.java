@@ -2,6 +2,7 @@ package com.webone.quiosq.service.impl;
 
 import com.webone.quiosq.entity.MercadoPagoToken;
 import com.webone.quiosq.entity.Quiosque;
+import com.webone.quiosq.exception.CodeErro.GeralError;
 import com.webone.quiosq.exception.CodeErro.QuiosqueError;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.itg.response.OAuthTokenResponse;
@@ -48,8 +49,15 @@ public class MercadoPagoTokenServiceImpl implements MercadoPagoTokenService {
 
     @Override
     public String getAccessToken(UUID quiosqueID) {
-        return repository.findAccessTokenByQuiosqueId(quiosqueID).orElseThrow(() -> new NotFoundException(
-            QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
+        return repository.findAccessTokenByQuiosqueId(quiosqueID)
+            .orElseThrow(() -> new NotFoundException(
+                QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
+    }
+
+    @Override
+    public MercadoPagoToken findById(Long userId) {
+        return repository.findById(userId).orElseThrow(() -> new NotFoundException(
+            GeralError.NAO_ENCONTRADO.getCodeErro()));
     }
 
 }

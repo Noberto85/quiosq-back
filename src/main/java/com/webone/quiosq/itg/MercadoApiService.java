@@ -3,6 +3,7 @@ package com.webone.quiosq.itg;
 import com.webone.quiosq.itg.request.PixRequest;
 import com.webone.quiosq.itg.response.OAuthTokenResponse;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
+import com.webone.quiosq.itg.response.StatusPagamentoApiResponse;
 import com.webone.quiosq.itg.response.UserDTO;
 
 public interface MercadoApiService {
@@ -12,4 +13,6 @@ public interface MercadoApiService {
     OAuthTokenResponse getAutorizationDetails(String code);
 
     PagamentoApiResponse createPix(String acessToken, String idempotencyKey, PixRequest request);
+
+    StatusPagamentoApiResponse verificaStatus(String accessToken, Long id);
 }

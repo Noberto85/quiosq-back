@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class PagamentoPix extends PagamentoHandle {
 
     private static final String PATH = "/api/webhook/mercadopago";
-    private static final int MINUTES_EXP = 15;
+    private static final int MINUTES_EXP = 1;
     private final MercadoApiService mercadoApiService;
     private final String notificationBase;
 

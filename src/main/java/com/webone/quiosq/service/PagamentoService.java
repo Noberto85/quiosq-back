@@ -5,7 +5,7 @@ import com.webone.quiosq.entity.Pagamento;
 
 public interface PagamentoService {
 
-    void create(Pagamento pagamento);
+    Pagamento create(Pagamento pagamento);
 
     StatusPagamento getStatusById(Long id);
 

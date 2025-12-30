@@ -14,17 +14,17 @@ public class CodeErro {
     private final HttpStatus httpStatus;
 
     @Getter
-    public enum ProvedorError {
+    public enum GeralError {
 
-        QUIOSQUE_NAO_ENCONTRADO(
-            new CodeErro(-1001, "Quiosque não encontrado!", Constants.SEM_DETALHES,
+       NAO_ENCONTRADO(
+            new CodeErro(-1001, "Pesquisa não encontrado!", Constants.SEM_DETALHES,
                 HttpStatus.NOT_FOUND)
 
         );
 
         private final CodeErro codeErro;
 
-        ProvedorError(CodeErro codeErro) {
+        GeralError(CodeErro codeErro) {
             this.codeErro = codeErro;
         }
 

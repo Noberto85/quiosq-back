@@ -6,6 +6,7 @@ import com.webone.quiosq.itg.MercadoApiService;
 import com.webone.quiosq.itg.request.PixRequest;
 import com.webone.quiosq.itg.response.OAuthTokenResponse;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
+import com.webone.quiosq.itg.response.StatusPagamentoApiResponse;
 import com.webone.quiosq.itg.response.UserDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,7 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class MercadoPagoApi implements MercadoApiService {
+public class MercadoPagoApiImpl implements MercadoApiService {
 
     private static final String CLIENT_ID = "client_id";
     private static final String CLIENT_SECRET = "client_secret";
@@ -32,6 +33,7 @@ public class MercadoPagoApi implements MercadoApiService {
     private final String PATH_USERS = "users/me";
     private final String PATH_AUTH_TOKEN = "oauth/token";
     private final String PATH_AUTH_PAYMENT = "v1/payments";
+
     private final RestTemplate restTemplate;
 
     private final String urlBase;
@@ -39,7 +41,7 @@ public class MercadoPagoApi implements MercadoApiService {
     private final String clientSecret;
     private final String redirectUri;
 
-    public MercadoPagoApi(RestTemplate restTemplate,
+    public MercadoPagoApiImpl(RestTemplate restTemplate,
         @Value("${mercadopago.pago.base-url}") String urlBase,
         @Value("${mercadopago.client_id}") String clientId,
         @Value("${mercadopago.client_secret}") String clientSecret,
@@ -64,8 +66,18 @@ public class MercadoPagoApi implements MercadoApiService {
     }
 
     @Override
-    public PagamentoApiResponse createPix(String acessToken, String idempotencyKey, PixRequest request) {
-        return post(idempotencyKey, acessToken, request, PATH_AUTH_PAYMENT, PagamentoApiResponse.class);
+    public PagamentoApiResponse createPix(String acessToken, String idempotencyKey,
+        PixRequest request) {
+        return post(idempotencyKey, acessToken, request, PATH_AUTH_PAYMENT,
+            PagamentoApiResponse.class);
+    }
+
+    @Override
+    public StatusPagamentoApiResponse verificaStatus(String accessToken, Long id) {
+        HeaderApi headerApi = new HeaderApi();
+        headerApi.setToken(accessToken);
+        String url = String.format("%s/%s", PATH_AUTH_PAYMENT, id);
+        return get(url, headerApi, StatusPagamentoApiResponse.class);
     }
 
     private <OUT> OUT get(String path, HeaderApi headerApi, Class<OUT> responseType) {
@@ -103,7 +115,8 @@ public class MercadoPagoApi implements MercadoApiService {
         }
     }
 
-    public <OUT, IN extends BaserRequest> OUT post(String idempotencyKey, String acessToken, IN body,
+    public <OUT, IN extends BaserRequest> OUT post(String idempotencyKey, String acessToken,
+        IN body,
         String path,
         Class<OUT> responseType) {
         String url = String.format(FORMAT_URL, urlBase, path);

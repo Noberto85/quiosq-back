@@ -12,4 +12,5 @@ public interface MercadoPagoTokenRepository extends JpaRepository<MercadoPagoTok
 
     @Query("SELECT m.accessToken FROM MercadoPagoToken m JOIN m.quiosque q WHERE q.id = :quiosqueId")
     Optional<String> findAccessTokenByQuiosqueId(@Param("quiosqueId") UUID quiosqueId);
+
 }

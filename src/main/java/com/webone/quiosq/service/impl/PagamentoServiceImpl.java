@@ -16,8 +16,8 @@ public class PagamentoServiceImpl implements PagamentoService {
     private final PagamentoRepository repository;
 
     @Override
-    public void create(Pagamento pagamento) {
-        repository.save(pagamento);
+    public Pagamento create(Pagamento pagamento) {
+       return repository.save(pagamento);
     }
 
     @Override
