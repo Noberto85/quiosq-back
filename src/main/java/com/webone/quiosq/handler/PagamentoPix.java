@@ -6,6 +6,7 @@ import com.webone.quiosq.itg.request.Identification;
 import com.webone.quiosq.itg.request.Payer;
 import com.webone.quiosq.itg.request.PixRequest;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
 public class PagamentoPix extends PagamentoHandle {
 
     private static final String PATH = "/api/webhook/mercadopago";
+    private static final int MINUTES_EXP = 15;
     private final MercadoApiService mercadoApiService;
-
     private final String notificationBase;
 
     public PagamentoPix(MercadoApiService mercadoApiService,
@@ -37,6 +38,7 @@ public class PagamentoPix extends PagamentoHandle {
         pixRequest.setDescription("Descricação teste");
         pixRequest.setTransactionAmount(request.getTotal());
 
+        pixRequest.setDateOfExpiration(OffsetDateTime.now().plusMinutes(MINUTES_EXP));
         pixRequest.setNotificationUrl(String.format("%s%s", notificationBase, PATH));
         pixRequest.setPaymentMethodId(request.getPagamento().getMetodo());
         pixRequest.setExternalReference(
@@ -49,7 +51,6 @@ public class PagamentoPix extends PagamentoHandle {
                 .type(request.getPagamento().getPixCpf())
                 .build())
             .build());
-
         return mercadoApiService.createPix(acessToken, idempotencyKey, pixRequest);
 
     }

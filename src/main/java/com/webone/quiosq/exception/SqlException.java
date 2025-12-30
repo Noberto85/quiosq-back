@@ -13,4 +13,9 @@ public class SqlException extends BaseException{
             erro.getDetails(), erro.getHttpStatus());
        this.error = error;
     }
+
+    public SqlException(CodeErro erro) {
+        super(erro.getMessage(), erro.getCod(),
+            erro.getDetails(), erro.getHttpStatus());
+    }
 }

@@ -1,6 +1,9 @@
 package com.webone.quiosq.service.impl;
 
+import com.webone.quiosq.dto.StatusPagamento;
 import com.webone.quiosq.entity.Pagamento;
+import com.webone.quiosq.exception.CodeErro.PagamentoError;
+import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.PagamentoRepository;
 import com.webone.quiosq.service.PagamentoService;
 import lombok.AllArgsConstructor;
@@ -15,6 +18,12 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Override
     public void create(Pagamento pagamento) {
         repository.save(pagamento);
+    }
+
+    @Override
+    public StatusPagamento getStatusById(Long id) {
+        return repository.getStatusById(id).map(StatusPagamento::new)
+            .orElseThrow(() -> new NotFoundException(PagamentoError.PAGAMENTO_ERROR.getCodeErro()));
     }
 
 }

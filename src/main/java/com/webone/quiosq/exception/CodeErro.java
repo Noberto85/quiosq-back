@@ -102,6 +102,23 @@ public class CodeErro {
 
     }
 
+    @Getter
+    public enum PagamentoError {
+
+        PAGAMENTO_ERROR(
+            new CodeErro(-6001, "Pagamento Não encotrado", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        PagamentoError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
 
     private static class Constants {
 

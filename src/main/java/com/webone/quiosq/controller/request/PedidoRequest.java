@@ -1,7 +1,6 @@
 package com.webone.quiosq.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.webone.quiosq.dto.ItemDTO;
 import com.webone.quiosq.dto.PaymentDTO;
 import java.math.BigDecimal;

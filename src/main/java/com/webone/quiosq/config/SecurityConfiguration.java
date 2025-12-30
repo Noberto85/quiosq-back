@@ -28,9 +28,10 @@ public class SecurityConfiguration {
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-        "/success.html","/api/webhook/**",
+        "/success.html", "/api/webhook/**",
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
-        "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/cliente", "/api/v1/auth/**","/api/v1/pedido/**"
+        "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/cliente", "/api/v1/auth/**",
+        "/api/v1/pedido/**"
     };
 
     // Endpoints que requerem autenticação para serem acessados
@@ -39,7 +40,7 @@ public class SecurityConfiguration {
     };
 
     private static final String[] ENDPOINTS_CLIENTE_ADMIN = {
-        "/api/v1/cardapio/**","/api/v1/categoria"
+        "/api/v1/cardapio/**", "/api/v1/categoria", "/api/v1/pagamento/**"
     };
 
     @Bean
@@ -49,7 +50,7 @@ public class SecurityConfiguration {
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authoriza -> authoriza
-                .requestMatchers(HttpMethod.GET,"/api/token").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/token").permitAll()
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(ENDPOINTS_CLIENTE_ADMIN).hasAnyRole(ADMIN, CLIENTE)
                 .anyRequest().authenticated()

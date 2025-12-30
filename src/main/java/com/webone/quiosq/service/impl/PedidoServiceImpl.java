@@ -3,6 +3,7 @@ package com.webone.quiosq.service.impl;
 import com.webone.quiosq.controller.request.PedidoRequest;
 import com.webone.quiosq.controller.response.PedidoResponse;
 import com.webone.quiosq.dto.ItemDTO;
+import com.webone.quiosq.dto.PagamentoResponse;
 import com.webone.quiosq.entity.Pagamento;
 import com.webone.quiosq.entity.Pedido;
 import com.webone.quiosq.exception.CodeErro.PedidoError;
@@ -16,6 +17,7 @@ import com.webone.quiosq.repository.PedidoRepository;
 import com.webone.quiosq.service.MercadoPagoTokenService;
 import com.webone.quiosq.service.PagamentoService;
 import com.webone.quiosq.service.PedidoService;
+import com.webone.quiosq.utils.DateUtils;
 import jakarta.transaction.Transactional;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +40,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     @Transactional
-    public PagamentoApiResponse createPedido(PedidoRequest request) {
+    public PagamentoResponse createPedido(PedidoRequest request) {
 
         try {
 
@@ -46,7 +48,7 @@ public class PedidoServiceImpl implements PedidoService {
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
             if (pedido.isEmpty()) {
-                throw new SqlException(PedidoError.PEDIDO_ERROR.getCodeErro(), null);
+                throw new SqlException(PedidoError.PEDIDO_ERROR.getCodeErro());
             }
             request.setPedidoId(pedido.get().getPedidoId());
             request.setCodePedido(pedido.get().getCodigoPedido());
@@ -60,7 +62,7 @@ public class PedidoServiceImpl implements PedidoService {
                 Optional<Pedido> byId = pedidoRepository.findById(pedido.get().getPedidoId());
                 pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
             }
-            return pagamentoResponse;
+            return new PagamentoResponse(pagamentoResponse, request.getPedidoId());
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -89,16 +91,10 @@ public class PedidoServiceImpl implements PedidoService {
             .tipo(pagamentoResponse.getPaymentTypeId())
             .valor(pagamentoResponse.getTransactionAmount())
             .metodo(pagamentoResponse.getPaymentMethodId())
-            .dataCriacao(pagamentoResponse.getDateCreated().toLocalDateTime())
-            .dataExpiracao(pagamentoResponse.getDateOfExpiration().toLocalDateTime())
-            .dataAprovacao(pagamentoResponse.getDateLastUpdated().toLocalDateTime())
+            .dataCriacao(DateUtils.convert(pagamentoResponse.getDateCreated()))
+            .dataExpiracao(DateUtils.convert(pagamentoResponse.getDateOfExpiration()))
             .externalReference(pagamentoResponse.getExternalReference())
             .statusDetail(pagamentoResponse.getStatusDetail())
-            .transactionId(
-                Optional.ofNullable(pagamentoResponse.getTransactionDetails())
-                    .map(TransacaoDetais::getTransactionId)
-                    .orElse(null)
-            )
             .build();
 
     }
