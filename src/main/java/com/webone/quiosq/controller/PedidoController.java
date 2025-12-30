@@ -3,6 +3,7 @@ package com.webone.quiosq.controller;
 
 import com.webone.quiosq.controller.request.PedidoRequest;
 import com.webone.quiosq.controller.response.PedidoResponse;
+import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.service.PedidoService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,10 +32,9 @@ public class PedidoController {
         @ApiResponse(description = "Erro interno do servidor", responseCode = "500")
     })
     @PostMapping
-    public ResponseEntity<?> createPedido(
+    public ResponseEntity<PagamentoApiResponse> createPedido(
         @RequestBody PedidoRequest createUserDto) {
-        service.createPedido(createUserDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(service.createPedido(createUserDto), HttpStatus.OK);
     }
 
     @GetMapping("/{mesa}/{quisoqueId}")

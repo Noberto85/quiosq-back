@@ -1,6 +1,7 @@
 package com.webone.quiosq.handler;
 
 import com.webone.quiosq.controller.request.PedidoRequest;
+import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +14,18 @@ public abstract class PagamentoHandle {
     protected PagamentoHandle() {
     }
 
-    public void handleRequest(PedidoRequest base, String acessToken) {
+    public PagamentoApiResponse handleRequest(PedidoRequest base, String acessToken) {
+
         if (canHandle(base.getPagamento().getMetodo())) {
-            handle(base, acessToken);
+            return handle(base, acessToken);
         } else if (next != null) {
             next.handleRequest(base, acessToken);
         }
+        return null;
     }
 
     protected abstract boolean canHandle(String type);
 
-    protected abstract void handle(PedidoRequest emailDto, String acessToken);
+    protected abstract PagamentoApiResponse handle(PedidoRequest emailDto, String acessToken);
+
 }

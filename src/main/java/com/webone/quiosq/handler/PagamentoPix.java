@@ -5,15 +5,25 @@ import com.webone.quiosq.itg.MercadoApiService;
 import com.webone.quiosq.itg.request.Identification;
 import com.webone.quiosq.itg.request.Payer;
 import com.webone.quiosq.itg.request.PixRequest;
+import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+
 @Component
-@AllArgsConstructor
 public class PagamentoPix extends PagamentoHandle {
 
+    private static final String PATH = "/api/webhook/mercadopago";
     private final MercadoApiService mercadoApiService;
+
+    private final String notificationBase;
+
+    public PagamentoPix(MercadoApiService mercadoApiService,
+        @Value("${notification.base}") String notificationBase) {
+        this.mercadoApiService = mercadoApiService;
+        this.notificationBase = notificationBase;
+    }
 
     @Override
     protected boolean canHandle(String type) {
@@ -21,25 +31,26 @@ public class PagamentoPix extends PagamentoHandle {
     }
 
     @Override
-    protected void handle(PedidoRequest request, String acessToken) {
+    protected PagamentoApiResponse handle(PedidoRequest request, String acessToken) {
         String idempotencyKey = UUID.randomUUID().toString();
         PixRequest pixRequest = new PixRequest();
         pixRequest.setDescription("Descricação teste");
         pixRequest.setTransactionAmount(request.getTotal());
-        pixRequest.setNotificationUrl(
-            "https://437ba9905884.ngrok-free.app/api/webhook/mercadopago");
-        pixRequest.setPaymentMethodId("pix");
+
+        pixRequest.setNotificationUrl(String.format("%s%s", notificationBase, PATH));
+        pixRequest.setPaymentMethodId(request.getPagamento().getMetodo());
         pixRequest.setExternalReference(
             String.format("%s-%s", request.getPedidoId(), request.getCodePedido()));
         pixRequest.setPayer(Payer.builder()
             .email(request.getPagamento().getEmail())
             .firstName("RAFAEL NOBERTO")
             .identification(Identification.builder()
-                .number(request.getClienteId())
-                .type("CPF")
+                .number(request.getPagamento().getPixCpf())
+                .type(request.getPagamento().getPixCpf())
                 .build())
             .build());
 
-        mercadoApiService.createPix(acessToken, idempotencyKey, pixRequest);
+        return mercadoApiService.createPix(acessToken, idempotencyKey, pixRequest);
+
     }
 }

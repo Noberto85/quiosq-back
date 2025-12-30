@@ -10,6 +10,7 @@ import com.webone.quiosq.service.QuiosqueService;
 import com.webone.quiosq.service.TokenService;
 import com.webone.quiosq.service.UserService;
 import jakarta.transaction.Transactional;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
@@ -34,7 +35,8 @@ public class TokenServiceImpl implements TokenService {
         UserDTO userDTO = service.getAuthToken(autorizationDetails.getAccessToken());
         QuiosqueRequest quiosqueRequest = new QuiosqueRequest();
         quiosqueRequest.setCnpj(userDTO.getIdentification().getNumber());
-        quiosqueRequest.setNome(userDTO.getNickname());
+        quiosqueRequest.setNome(String.format("%s %s", userDTO.getFirstName(),
+            Objects.nonNull(userDTO.getLastName()) ? userDTO.getLastName() : ""));
         quiosqueRequest.setEmail(userDTO.getEmail());
         quiosqueRequest.setTelefone(String.format("%s%s", userDTO.getPhone().getArea_code(),
             userDTO.getPhone().getNumber()));

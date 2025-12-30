@@ -1,5 +1,6 @@
 package com.webone.quiosq.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.webone.quiosq.dto.ItemDTO;
 import com.webone.quiosq.dto.PaymentDTO;
@@ -17,9 +18,9 @@ public class PedidoRequest {
     private List<ItemDTO> items;
     private PaymentDTO pagamento;
     private BigDecimal total;
-    @JsonIgnoreProperties
-    private String codePedido;
-    @JsonIgnoreProperties
+    @JsonIgnore
+    private String codePedido; //
+    @JsonIgnore
     private Long PedidoId;
 
 }

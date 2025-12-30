@@ -5,9 +5,8 @@ import com.webone.quiosq.dto.HeaderApi;
 import com.webone.quiosq.itg.MercadoApiService;
 import com.webone.quiosq.itg.request.PixRequest;
 import com.webone.quiosq.itg.response.OAuthTokenResponse;
-import com.webone.quiosq.itg.response.PixResponse;
+import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.itg.response.UserDTO;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +26,9 @@ public class MercadoPagoApi implements MercadoApiService {
     private static final String GRANT_TYPE = "grant_type";
     private static final String CODE = "code";
     private static final String REDIRECT_URI = "redirect_uri";
-    public static final String AUTHORIZATION_CODE = "authorization_code";
+    private static final String AUTHORIZATION_CODE = "authorization_code";
+    private static final String X_IDEMPOTENCY_KEY = "X-Idempotency-Key";
+    private static final String FORMAT_URL = "%s/%s";
     private final String PATH_USERS = "users/me";
     private final String PATH_AUTH_TOKEN = "oauth/token";
     private final String PATH_AUTH_PAYMENT = "v1/payments";
@@ -63,15 +64,15 @@ public class MercadoPagoApi implements MercadoApiService {
     }
 
     @Override
-    public PixResponse createPix(String acessToken, String idempotencyKey, PixRequest request) {
-        return post(idempotencyKey, acessToken, request, PATH_AUTH_PAYMENT, PixResponse.class);
+    public PagamentoApiResponse createPix(String acessToken, String idempotencyKey, PixRequest request) {
+        return post(idempotencyKey, acessToken, request, PATH_AUTH_PAYMENT, PagamentoApiResponse.class);
     }
 
     private <OUT> OUT get(String path, HeaderApi headerApi, Class<OUT> responseType) {
         HttpHeaders headers = getHttpHeaders(headerApi);
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        String url = String.format("%s/%s", urlBase, path);
+        String url = String.format(FORMAT_URL, urlBase, path);
         ResponseEntity<OUT> response = restTemplate.exchange(
             url,
             HttpMethod.GET,
@@ -83,31 +84,35 @@ public class MercadoPagoApi implements MercadoApiService {
 
     public <OUT> OUT post(MultiValueMap<String, String> body, String path,
         Class<OUT> responseType) {
-        String url = String.format("%s/%s", urlBase, path);
+        try {
+            String url = String.format(FORMAT_URL, urlBase, path);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<OUT> response = restTemplate.exchange(
-            url,
-            HttpMethod.POST,
-            request,
-            responseType
-        );
-        return response.getBody();
+            ResponseEntity<OUT> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                responseType
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <OUT, IN extends BaserRequest> OUT post(String idempotencyKey, String acessToken, IN body,
         String path,
         Class<OUT> responseType) {
-        String url = String.format("%s/%s", urlBase, path);
+        String url = String.format(FORMAT_URL, urlBase, path);
 
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(acessToken);
-            headers.add("X-Idempotency-Key", idempotencyKey);
+            headers.add(X_IDEMPOTENCY_KEY, idempotencyKey);
             HttpEntity<BaserRequest> request = new HttpEntity<>(body, headers);
 
             ResponseEntity<OUT> response = restTemplate.exchange(

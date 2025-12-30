@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS create_pedido;
 
-CREATE OR REPLACE FUNCTION create_pedido(
+CREATE OR REPLACE FUNCTION func_create_pedido(
     quiosque_in UUID,
     mesa_in BIGINT,
     telefone_in VARCHAR,
@@ -35,9 +35,18 @@ BEGIN
         RAISE EXCEPTION 'MESA OU QUIOSQUE NÃO ENCONTRADO';
     END IF;
 
+     SELECT quiosque_id INTO var_cont
+        FROM contador_pedido_quiosque
+        WHERE quiosque_id = quiosque_in;
+        -- INICIA A CONTAGEM DO PEDIDO PARA CADA QUIOSQUE
+        IF var_cont IS NULL THEN
+          INSERT INTO contador_pedido_quiosque (quiosque_id, valor)
+          VALUES (quiosqueId, 1);
+          END IF;
+
     -- Cria pedido
     INSERT INTO pedido (status, mesa_id, quiosque_id, data_init, cliente_id)
-    VALUES ('AGUARDANDO PAGAMENTO', mesaId, quiosqueId, NOW(), varclienteId)
+    VALUES ('AGUARDANDO_PAGAMENTO', mesaId, quiosqueId, NOW(), varclienteId)
     RETURNING id, codigo INTO pedido_id, codigo_pedido;
 
     -- Insere itens

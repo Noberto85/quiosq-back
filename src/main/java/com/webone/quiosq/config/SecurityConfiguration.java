@@ -28,7 +28,7 @@ public class SecurityConfiguration {
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-        "/success.html",
+        "/success.html","/api/webhook/**",
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
         "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/cliente", "/api/v1/auth/**","/api/v1/pedido/**"
     };

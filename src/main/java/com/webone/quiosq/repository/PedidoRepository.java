@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query(
-        value = "SELECT * FROM create_pedido(:quiosqueId, CAST(:mesaId AS BIGINT), :telefone, CAST(:itens AS item_pedido_type[]))",
+        value = "SELECT * FROM func_create_pedido(:quiosqueId, CAST(:mesaId AS BIGINT), :telefone, CAST(:itens AS item_pedido_type[]))",
         nativeQuery = true
     )
     Optional<PedidoProjection> createPedido(
