@@ -90,7 +90,7 @@ public class CodeErro {
 
         PEDIDO_ERROR(
             new CodeErro(-5001, "Pedido não encotrado", Constants.SEM_DETALHES,
-                HttpStatus.UNAUTHORIZED)
+                HttpStatus.NOT_FOUND)
 
         );
 
@@ -107,7 +107,7 @@ public class CodeErro {
 
         PAGAMENTO_ERROR(
             new CodeErro(-6001, "Pagamento Não encotrado", Constants.SEM_DETALHES,
-                HttpStatus.UNAUTHORIZED)
+                HttpStatus.NOT_FOUND)
 
         );
 
@@ -118,6 +118,24 @@ public class CodeErro {
         }
 
     }
+
+    @Getter
+    public enum NaoAutorizadoError {
+
+        SUSPEIRA_FRAUDE_ERROR(
+            new CodeErro(-7001, "Suspeita de fraude", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        NaoAutorizadoError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
 
 
     private static class Constants {

@@ -28,6 +28,6 @@ public class MercadoPagoWebhookDTO {
 
     @Data
     public static class DataPayload {
-        private Long id;
+        private String id;
     }
 }
