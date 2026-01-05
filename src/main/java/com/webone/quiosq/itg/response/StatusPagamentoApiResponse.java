@@ -7,8 +7,19 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class StatusPagamentoApiResponse {
+
     private Long id;
     private String status;
     private String statusDetail;
+    private TransactionDetails transactionDetails;
 
+
+    @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class TransactionDetails {
+
+        private String transactionId;
+
+    }
 }
+

@@ -18,6 +18,7 @@ import com.webone.quiosq.service.PagamentoService;
 import com.webone.quiosq.service.PedidoService;
 import com.webone.quiosq.utils.DateUtils;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         try {
 
-            Optional<PedidoProjection> pedido = pedidoRepository.createPedido(
+            Optional<PedidoProjection> pedido = pedidoRepository.createPedido(request.getNome(),
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
             if (pedido.isEmpty()) {
@@ -53,7 +54,7 @@ public class PedidoServiceImpl implements PedidoService {
             request.setCodePedido(pedido.get().getCodigoPedido());
             String accessToken = mercadoPagoTokenService.getAccessToken(request.getQuiosqueId());
             Iterator<PagamentoHandle> iterator = pagamentoHandle.iterator();
-            PagamentoApiResponse pagamentoResponse = null;
+            PagamentoApiResponse pagamentoResponse;
 
             if (iterator.hasNext()) {
                 PagamentoHandle next = iterator.next();
@@ -73,6 +74,14 @@ public class PedidoServiceImpl implements PedidoService {
     public List<PedidoResponse> findPedido(UUID quisoqueID, Integer mesa) {
         List<Pedido> pedido = pedidoRepository.findPedido(quisoqueID, mesa);
         return pedido.stream().map(PedidoResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PedidoResponse> findByClienteId(UUID quiosqueId, String telefone) {
+        return pedidoRepository.findByClienteId(quiosqueId, telefone,
+                LocalDateTime.now().minusHours(12),
+                LocalDateTime.now().plusHours(12)).stream().map(PedidoResponse::new)
+            .collect(Collectors.toList());
     }
 
     private static String buildItensList(List<ItemDTO> itens) {

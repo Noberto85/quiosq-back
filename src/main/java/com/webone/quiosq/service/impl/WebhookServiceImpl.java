@@ -95,6 +95,7 @@ public class WebhookServiceImpl implements WebhookService {
         pagamento.setStatus(payload.getStatus());
         pagamento.setStatusDetail(payload.getStatusDetail());
         pagamento.getPedido().setStatus(status);
+        pagamento.setTransactionId(payload.getTransactionDetails().getTransactionId());
         repository.save(pagamento);
     }
 

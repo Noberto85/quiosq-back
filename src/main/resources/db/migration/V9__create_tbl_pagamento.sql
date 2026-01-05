@@ -1,4 +1,4 @@
-CREATE TABLE pagamento (
+CREATE TABLE tb_pagamento (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     pedido_id BIGINT NOT NULL,
     mp_pag_id BIGINT NOT NULL,
@@ -13,5 +13,5 @@ CREATE TABLE pagamento (
     data_criacao TIMESTAMP NOT NULL,
     data_expiracao TIMESTAMP,
     data_aprovacao TIMESTAMP,
-    CONSTRAINT fk_pagamento_pedido FOREIGN KEY (pedido_id) REFERENCES pedido(id)
+    CONSTRAINT fk_pagamento_pedido FOREIGN KEY (pedido_id) REFERENCES tb_pedido(id)
 );

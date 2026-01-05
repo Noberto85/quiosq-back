@@ -107,37 +107,7 @@
   </div>
   <h1>Obrigado!</h1>
   <p>Seu cadastro foi realizado com sucesso.</p>
-
-  <div class="timer-text">Redirecionando em <span id="countdown">5</span> segundos...</div>
-  <div class="loader">
-    <div class="loader-bar" id="loaderBar"></div>
-  </div>
 </div>
 
-<script>
-  // Configuração
-  const redirectUrl = "https://www.google.com"; // Substitua pelo site desejado
-  const redirectTime = 5; // Tempo em segundos
-
-  let timeLeft = redirectTime;
-  const countdownEl = document.getElementById('countdown');
-  const loaderBar = document.getElementById('loaderBar');
-
-  // Inicializa a barra de progresso
-  setTimeout(() => {
-      loaderBar.style.transition = `width ${redirectTime}s linear`;
-      loaderBar.style.width = '100%';
-  }, 100);
-
-  const timer = setInterval(() => {
-      timeLeft--;
-      countdownEl.textContent = timeLeft;
-
-      if (timeLeft <= 0) {
-          clearInterval(timer);
-          window.location.href = redirectUrl;
-      }
-  }, 1000);
-</script>
 </body>
 </html>

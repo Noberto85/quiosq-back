@@ -17,6 +17,8 @@ public class PedidoRequest {
     private List<ItemDTO> items;
     private PaymentDTO pagamento;
     private BigDecimal total;
+    private String email;
+    private String nome;
     @JsonIgnore
     private String codePedido; //
     @JsonIgnore

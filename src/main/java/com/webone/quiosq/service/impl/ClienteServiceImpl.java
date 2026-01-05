@@ -75,7 +75,6 @@ public class ClienteServiceImpl implements ClienteService {
             .clienteId(cliente.getId())
             .telefone(cliente.getTelefone())
             .quiosqueId(request.getQuiosqueId())
-            .nome(cliente.getNome())
             .mesa(request.getMesa())
             .build();
         return authService.authenticateClient(build);

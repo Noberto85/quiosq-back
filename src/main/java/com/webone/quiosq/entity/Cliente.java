@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "cliente")
+@Table(name = "tb_cliente")
 @Entity()
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,9 +41,6 @@ public class Cliente implements Serializable {
     @Column(nullable = false)
     private String telefone;
 
-    @Column(nullable = false)
-    private String nome;
-
     private LocalDateTime dataAcesso;
 
     private LocalDateTime ultimoAcesso;
@@ -54,7 +51,7 @@ public class Cliente implements Serializable {
 
     @ManyToMany
     @JoinTable(
-        name = "cliente_quiosque",
+        name = "tb_cliente_quiosque",
         joinColumns = @JoinColumn(name = "cliente_id"),
         inverseJoinColumns = @JoinColumn(name = "quiosque_id")
     )

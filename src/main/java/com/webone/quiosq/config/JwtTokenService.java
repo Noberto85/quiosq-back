@@ -68,7 +68,6 @@ public class JwtTokenService {
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDateClient())
                 .withSubject(user.getTelefone())
-                .withClaim(NOME, user.getNome())
                 .withClaim(NUMERO_MESA, user.getMesa())
                 .withClaim(MESA_ID, mesaId)
                 .withClaim(QUIOSQUE_ID, user.getQuiosqueId().toString())

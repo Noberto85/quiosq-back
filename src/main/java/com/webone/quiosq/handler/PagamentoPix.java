@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 public class PagamentoPix extends PagamentoHandle {
 
     private static final String PATH = "/api/webhook/mercadopago";
-    private static final int MINUTES_EXP = 2;
+    private static final int MINUTES_EXP = 15;
+    private static final String PIX = "pix";
     private final MercadoApiService mercadoApiService;
     private final String notificationBase;
 
@@ -28,27 +29,26 @@ public class PagamentoPix extends PagamentoHandle {
 
     @Override
     protected boolean canHandle(String type) {
-        return type.equals("pix");
+        return type.equals(PIX);
     }
 
     @Override
     protected PagamentoApiResponse handle(PedidoRequest request, String acessToken) {
         String idempotencyKey = UUID.randomUUID().toString();
         PixRequest pixRequest = new PixRequest();
-        pixRequest.setDescription("Descricação teste");
+        pixRequest.setDescription(String.format("Pedido: #%s", request.getCodePedido()));
         pixRequest.setTransactionAmount(request.getTotal());
-
         pixRequest.setDateOfExpiration(OffsetDateTime.now().plusMinutes(MINUTES_EXP));
         pixRequest.setNotificationUrl(String.format("%s%s", notificationBase, PATH));
         pixRequest.setPaymentMethodId(request.getPagamento().getMetodo());
         pixRequest.setExternalReference(
             String.format("%s-%s", request.getPedidoId(), request.getCodePedido()));
         pixRequest.setPayer(Payer.builder()
-            .email(request.getPagamento().getEmail())
-            .firstName("RAFAEL NOBERTO")
+            .email(request.getEmail())
+            .firstName(request.getNome())
             .identification(Identification.builder()
-                .number(request.getPagamento().getPixCpf())
-                .type(request.getPagamento().getPixCpf())
+                .number(request.getPagamento().getDocumento())
+                .type(request.getPagamento().getDocumento())
                 .build())
             .build());
         return mercadoApiService.createPix(acessToken, idempotencyKey, pixRequest);

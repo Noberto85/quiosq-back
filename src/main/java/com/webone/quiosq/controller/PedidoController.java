@@ -45,4 +45,11 @@ public class PedidoController {
         return new ResponseEntity<>(service.findPedido(quisque, mesa), HttpStatus.OK);
     }
 
+    @GetMapping("findByCliente/{telefone}/{quisoqueId}")
+    public ResponseEntity<List<PedidoResponse>> findAllCliente(
+        @PathVariable("telefone") String telefone,
+        @PathVariable("quisoqueId") UUID quisque) {
+        return new ResponseEntity<>(service.findByClienteId(quisque, telefone), HttpStatus.OK);
+    }
+
 }

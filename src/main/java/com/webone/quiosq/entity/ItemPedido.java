@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "item_Pedido")
+@Table(name = "tb_item_Pedido")
 @Builder
 @Getter
 @Setter

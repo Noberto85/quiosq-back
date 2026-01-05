@@ -1,6 +1,13 @@
-DROP PROCEDURE IF EXISTS create_pedido;
+
+SET TIMEZONE TO 'America/Sao_Paulo';
+
+CREATE TYPE item_pedido_type AS (
+    item_id INTEGER,
+    quantidade INTEGER
+);
 
 CREATE OR REPLACE FUNCTION func_create_pedido(
+    nome_pedido_in VARCHAR,
     quiosque_in UUID,
     mesa_in BIGINT,
     telefone_in VARCHAR,
@@ -9,57 +16,59 @@ CREATE OR REPLACE FUNCTION func_create_pedido(
 RETURNS TABLE(pedido_id BIGINT, codigo_pedido VARCHAR)
 AS $$
 DECLARE
-    var_cont  contador_pedido_quiosque.quiosque_id%type;
-    varclienteId cliente.id%type;
-    quiosqueId quiosque.id%type;
-    mesaId mesa.id%type;
-    precoUnit item_cardapio.preco%type;
+    var_cont  tb_contador_pedido_quiosque.quiosque_id%type;
+    varclienteId tb_cliente.id%type;
+    quiosqueId tb_quiosque.id%type;
+    mesaId tb_mesa.id%type;
+    precoUnit tb_item_cardapio.preco%type;
     item item_pedido_type;
 BEGIN
     -- Verifica cliente pelo telefone
     SELECT id INTO varclienteId
-    FROM cliente
+    FROM tb_cliente
     WHERE telefone = telefone_in;
 
     -- Verifica quiosque
     SELECT id INTO quiosqueId
-    FROM quiosque
+    FROM tb_quiosque
     WHERE id = quiosque_in;
 
     -- Verifica mesa
     SELECT id INTO mesaId
-    FROM mesa
-    WHERE id = mesa_in AND quiosque_id = quiosque_in;
+    FROM tb_mesa
+    WHERE numero = mesa_in AND quiosque_id = quiosque_in;
 
     IF quiosqueId IS NULL OR mesaId IS NULL THEN
         RAISE EXCEPTION 'MESA OU QUIOSQUE NÃO ENCONTRADO';
     END IF;
 
      SELECT quiosque_id INTO var_cont
-        FROM contador_pedido_quiosque
+        FROM tb_contador_pedido_quiosque
         WHERE quiosque_id = quiosque_in;
         -- INICIA A CONTAGEM DO PEDIDO PARA CADA QUIOSQUE
         IF var_cont IS NULL THEN
-          INSERT INTO contador_pedido_quiosque (quiosque_id, valor)
+          INSERT INTO tb_contador_pedido_quiosque (quiosque_id, valor)
           VALUES (quiosqueId, 1);
           END IF;
 
     -- Cria pedido
-    INSERT INTO pedido (status, mesa_id, quiosque_id, data_init, cliente_id)
-    VALUES ('AGUARDANDO_PAGAMENTO', mesaId, quiosqueId, NOW(), varclienteId)
+    INSERT INTO tb_pedido (nome_pedido,status, mesa_id, quiosque_id, data_init, cliente_id)
+    VALUES (nome_pedido_in,'AGUARDANDO_PAGAMENTO', mesaId, quiosqueId, NOW(), varclienteId)
     RETURNING id, codigo INTO pedido_id, codigo_pedido;
 
     -- Insere itens
     FOREACH item IN ARRAY itens_in
     LOOP
         SELECT (preco * item.quantidade) INTO precoUnit
-        FROM item_cardapio
+        FROM tb_item_cardapio
         WHERE id = item.item_id;
 
-        INSERT INTO item_pedido (quantidade, valor_soma, pedido_id, item_cardapio_id)
+        INSERT INTO tb_item_pedido (quantidade, valor_soma, pedido_id, item_cardapio_id)
         VALUES (item.quantidade, precoUnit, pedido_id, item.item_id);
     END LOOP;
 
     RETURN NEXT;
 END;
 $$ LANGUAGE plpgsql;
+
+

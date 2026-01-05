@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface MesaRepository extends JpaRepository<Mesa, Long> {
 
-    @Query(value = "SELECT * FROM get_mesa_info(:quiosqueId, :mesaId)", nativeQuery = true)
+    @Query(value = "SELECT * FROM func_get_mesa_info(:quiosqueId, :mesaId)", nativeQuery = true)
     Optional<MesaInfoProjection> getMesaInfo(@Param("quiosqueId") UUID quiosqueId,
         @Param("mesaId") Long mesaId);
 

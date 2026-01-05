@@ -13,5 +13,7 @@ public interface PedidoService {
 
     List<PedidoResponse> findPedido(UUID quisoqueID, Integer mesa);
 
+    List<PedidoResponse> findByClienteId(UUID quiosqueId, String telefone);
+
 
 }

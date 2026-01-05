@@ -1,4 +1,4 @@
-CREATE TABLE mercadopago_tokens (
+CREATE TABLE tb_mercadopago_tokens (
     id SERIAL PRIMARY KEY,
     quiosque_id UUID NOT NULL,
     access_token TEXT NOT NULL,
@@ -11,10 +11,10 @@ CREATE TABLE mercadopago_tokens (
     live_mode BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id) ON DELETE CASCADE
+    CONSTRAINT fk_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id) ON DELETE CASCADE
 );
 
-CREATE TABLE endereco (
+CREATE TABLE tb_endereco (
     id SERIAL PRIMARY KEY,
     logradouro VARCHAR(150),
     numero VARCHAR(20),
@@ -25,8 +25,8 @@ CREATE TABLE endereco (
     cep VARCHAR(15) NOT NULL,
     pais VARCHAR(50) DEFAULT 'Brasil',
     quiosque_id UUID UNIQUE,
-    CONSTRAINT fk_quiosque FOREIGN KEY (quiosque_id) REFERENCES quiosque(id) ON DELETE CASCADE
+    CONSTRAINT fk_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id) ON DELETE CASCADE
 );
 
-ALTER TABLE  quiosque ADD COLUMN telefone VARCHAR(20);
-ALTER TABLE  quiosque ADD COLUMN email VARCHAR(255);
+ALTER TABLE  tb_quiosque ADD COLUMN telefone VARCHAR(20);
+ALTER TABLE  tb_quiosque ADD COLUMN email VARCHAR(255);

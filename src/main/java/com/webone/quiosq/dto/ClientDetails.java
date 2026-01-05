@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class ClientDetails {
     private Long clienteId;
-    private String nome;
     private String telefone;
     private UUID quiosqueId;
     private Integer mesa;

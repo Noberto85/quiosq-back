@@ -33,9 +33,9 @@ public class PedidoResponse {
             .collect(Collectors.toList());
         this.dataInit = pedido.getDataInit();
         this.dataFim = pedido.getDataFim();
-        var parcial = pedido.getItens().stream().map(ItemPedido::getValorSoma)
+        total= pedido.getItens().stream().map(ItemPedido::getValorSoma)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-        total = parcial.add(ACRESCIMO);
+
     }
 }
 

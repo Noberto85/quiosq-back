@@ -11,8 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentDTO {
     private String metodo;
-    private String pixCpf;
-    private String email;
+    private String documento;
     private CardDTO card;
 
 }

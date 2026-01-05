@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "mercadopago_tokens")
+@Table(name = "tb_mercadopago_tokens")
 @Builder
 @Getter
 @Setter
