@@ -6,19 +6,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "cliente")
+@Table(name = "tb_cliente")
 @Entity()
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,9 +41,6 @@ public class Cliente implements Serializable {
     @Column(nullable = false)
     private String telefone;
 
-    @Column(nullable = false)
-    private String nome;
-
     private LocalDateTime dataAcesso;
 
     private LocalDateTime ultimoAcesso;
@@ -48,9 +49,14 @@ public class Cliente implements Serializable {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "quiosque_id", nullable = false)
-    private Quiosque quiosque;
+    @ManyToMany
+    @JoinTable(
+        name = "tb_cliente_quiosque",
+        joinColumns = @JoinColumn(name = "cliente_id"),
+        inverseJoinColumns = @JoinColumn(name = "quiosque_id")
+    )
+    private Set<Quiosque> quiosques;
+
 
     @PrePersist
     public void prePersist() {

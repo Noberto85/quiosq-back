@@ -6,12 +6,12 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.entity.enums.RoleName;
+import com.webone.quiosq.service.MesaService;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,22 +22,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtTokenService {
 
-    private static final String AMERICA_RECIFE = "America/Recife";
+    private final MesaService mesaService;
+    private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
     private static final String ROLES = "Roles";
     private static final String CLIENTE = "CLIENTE";
     private static final String QUIOSQUE_ID = "quiosque_id";
-    private static final String MESA = "mesa";
+    private static final String NUMERO_MESA = "numeroMesa";
+    private static final String MESA_ID = "mesaId";
     private static final String SUB = "sub";
-    private static final String ROLE = "role";
-    private static final String NOME = "nome";
+    private static final String TAXA = "taxa";
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
-    public JwtTokenService(@Value("${jwt.secret.key}") String secretKey) {
+    public JwtTokenService(MesaService mesaService, @Value("${jwt.secret.key}") String secretKey) {
+        this.mesaService = mesaService;
         this.secretKey = secretKey;
     }
 
     public String generateToken(UserDetails user) {
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
@@ -57,6 +60,7 @@ public class JwtTokenService {
     }
 
     public String generateTokenClient(ClientDetails user) {
+        Long mesaId = mesaService.findByQuiosqueAndMesa(user.getQuiosqueId(), user.getMesa());
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
@@ -64,8 +68,9 @@ public class JwtTokenService {
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDateClient())
                 .withSubject(user.getTelefone())
-                .withClaim(NOME, user.getNome())
-                .withClaim(MESA, user.getMesa())
+                .withClaim(NUMERO_MESA, user.getMesa())
+                .withClaim(TAXA, user.getTaxa().toString())
+                .withClaim(MESA_ID, mesaId)
                 .withClaim(QUIOSQUE_ID, user.getQuiosqueId().toString())
                 .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
                 .sign(algorithm);
@@ -76,7 +81,7 @@ public class JwtTokenService {
     }
 
 
-    public String generateClientWithoutExpiration(UUID quiosqueId, Long mesaId) {
+    public String generateClientWithoutExpiration(UUID quiosqueId, Integer numero, Long mesaId) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
@@ -84,7 +89,8 @@ public class JwtTokenService {
                 .withIssuer(ISSUER)
                 .withClaim(QUIOSQUE_ID, quiosqueId.toString())
                 .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
-                .withClaim(MESA, mesaId)
+                .withClaim(NUMERO_MESA, numero)
+                .withClaim(MESA_ID, mesaId)
                 .sign(algorithm);
 
         } catch (JWTCreationException exception) {
@@ -94,38 +100,39 @@ public class JwtTokenService {
 
     public JwtPayload parse(String token) {
 
-            final var claims = JWT.require(Algorithm.HMAC256(secretKey))
-                .withIssuer(ISSUER)
-                .build()
-                .verify(token)
-                .getClaims();
-            List<String> roles = claims.get(ROLES).asList(String.class);
+        final var claims = JWT.require(Algorithm.HMAC256(secretKey))
+            .withIssuer(ISSUER)
+            .build()
+            .verify(token)
+            .getClaims();
+        List<String> roles = claims.get(ROLES).asList(String.class);
 
-            JwtPayload p = new JwtPayload();
-            if (roles.contains(RoleName.ROLE_CLIENTE.name())) {
-                p.setSubject(claims.get(SUB).asString());
-                p.setMesaId(claims.get(MESA).asInt());
-                p.setRole(roles.get(0));
-                p.setQuiosqueId(UUID.fromString(claims.get(QUIOSQUE_ID).asString()));
-            }
-            if (!roles.contains(RoleName.ROLE_CLIENTE.name())) {
-                p.setSubject(claims.get(SUB).asString());
-            }
+        JwtPayload p = new JwtPayload();
+        if (roles.contains(RoleName.ROLE_CLIENTE.name())) {
+            p.setSubject(claims.get(SUB).asString());
+            p.setNumeroMesa(claims.get(NUMERO_MESA).asInt());
+            p.setMesaId(claims.get(MESA_ID).asLong());
+            p.setRole(roles.get(0));
+            p.setQuiosqueId(UUID.fromString(claims.get(QUIOSQUE_ID).asString()));
+        }
+        if (!roles.contains(RoleName.ROLE_CLIENTE.name())) {
+            p.setSubject(claims.get(SUB).asString());
+        }
 
-            return p;
+        return p;
 
     }
 
     private Instant creationDate() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).toInstant();
     }
 
     private Instant expirationDate() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(8).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).plusHours(8).toInstant();
     }
 
     private Instant expirationDateClient() {
-        return ZonedDateTime.now(ZoneId.of(AMERICA_RECIFE)).plusHours(1).toInstant();
+        return ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)).plusHours(1).toInstant();
     }
 
 }

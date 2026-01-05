@@ -12,9 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-    @Query("SELECT c FROM Cliente c JOIN FETCH c.quiosque q " +
-        "WHERE c.telefone = :telefone AND q.id = :quiosqueId")
-    Optional<Cliente> findByTelefoneAndQuiosqueId(@Param("telefone") String telefone,
-        @Param("quiosqueId") UUID quiosqueId);
+    Optional<Cliente> findByTelefone(String telefone);
 
 }

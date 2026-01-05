@@ -1,11 +1,17 @@
 package com.webone.quiosq.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PaymentDTO {
-
-    private String method;
+    private String metodo;
+    private String documento;
     private CardDTO card;
 
 }

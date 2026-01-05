@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "item_Pedido")
+@Table(name = "tb_item_Pedido")
 @Builder
 @Getter
 @Setter
@@ -34,8 +34,8 @@ public class ItemPedido {
     private Integer quantidade;
 
     // Preço unitário no momento da venda (para histórico)
-    @Column(name = "preco_unitario", precision = 10, scale = 2, nullable = false)
-    private BigDecimal precoUnitario;
+    @Column(name = "valor_soma", precision = 10, scale = 2, nullable = false)
+    private BigDecimal valorSoma;
 
     // Relacionamento com Pedido
     @ManyToOne(fetch = FetchType.LAZY)

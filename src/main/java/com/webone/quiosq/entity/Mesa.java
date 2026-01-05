@@ -7,6 +7,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "mesa")
+@Table(name = "tb_mesa")
 @Builder
 @Getter
 @Setter
@@ -41,7 +42,7 @@ public class Mesa {
     @JsonBackReference
     private Garcom garcom;
 
-    @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Pedido> pedidos;
 

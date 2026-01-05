@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "item_cardapio")
+@Table(name = "tb_item_cardapio")
 @Builder
 @Getter
 @Setter
@@ -42,7 +42,7 @@ public class ItemCardapio {
 
     private String urlImagem;
 
-        private Integer avaliacao;
+    private Integer avaliacao;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)

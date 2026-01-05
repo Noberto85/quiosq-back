@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface QuiosqueService {
 
-    void save(QuiosqueRequest request);
+    Quiosque save(QuiosqueRequest request);
 
     QuiosqueResponse findById(UUID id);
 

@@ -14,17 +14,17 @@ public class CodeErro {
     private final HttpStatus httpStatus;
 
     @Getter
-    public enum ProvedorError {
+    public enum GeralError {
 
-        QUIOSQUE_NAO_ENCONTRADO(
-            new CodeErro(-1001, "Quiosque não encontrado!", Constants.SEM_DETALHES,
+       NAO_ENCONTRADO(
+            new CodeErro(-1001, "Pesquisa não encontrado!", Constants.SEM_DETALHES,
                 HttpStatus.NOT_FOUND)
 
         );
 
         private final CodeErro codeErro;
 
-        ProvedorError(CodeErro codeErro) {
+        GeralError(CodeErro codeErro) {
             this.codeErro = codeErro;
         }
 
@@ -35,6 +35,11 @@ public class CodeErro {
 
         MESA_NAO_ENCONTRADO(
             new CodeErro(-2001, "Mesa não encontrado!", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        ),
+        QUIOSQUE_NAO_ENCONTRADO(
+            new CodeErro(-2002, "Quiosque não encontrado", Constants.SEM_DETALHES,
                 HttpStatus.NOT_FOUND)
 
         );
@@ -62,6 +67,80 @@ public class CodeErro {
         }
 
     }
+
+    @Getter
+    public enum AuthError {
+
+        AUTH_ERROR(
+            new CodeErro(-4001, "Autenticação não realizada!", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        AuthError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
+    @Getter
+    public enum PedidoError {
+
+        PEDIDO_ERROR(
+            new CodeErro(-5001, "Pedido não encotrado", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        );
+
+        private final CodeErro codeErro;
+
+        PedidoError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
+    @Getter
+    public enum PagamentoError {
+
+        PAGAMENTO_ERROR(
+            new CodeErro(-6001, "Pagamento Não encotrado", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        ),
+        PAGAMENTO_EXPIRADO_ERROR(
+            new CodeErro(-6002, "Pagamento expirado ou cancelado!", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
+        );
+
+        private final CodeErro codeErro;
+
+        PagamentoError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
+    @Getter
+    public enum NaoAutorizadoError {
+
+        SUSPEIRA_FRAUDE_ERROR(
+            new CodeErro(-7001, "Suspeita de fraude", Constants.SEM_DETALHES,
+                HttpStatus.UNAUTHORIZED)
+
+        );
+
+        private final CodeErro codeErro;
+
+        NaoAutorizadoError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+
+    }
+
 
 
     private static class Constants {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webone.quiosq.controller.request.QuiosqueRequest;
 import com.webone.quiosq.controller.response.QuiosqueResponse;
 import com.webone.quiosq.entity.Quiosque;
-import com.webone.quiosq.exception.CodeErro.ProvedorError;
+import com.webone.quiosq.exception.CodeErro.GeralError;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.QuiosqueService;
@@ -22,8 +22,8 @@ public class QuiosqueServiceImpl implements QuiosqueService {
     private final ObjectMapper mapper;
 
     @Override
-    public void save(QuiosqueRequest request) {
-        repository.save(mapper.convertValue(request, Quiosque.class));
+    public Quiosque save(QuiosqueRequest request) {
+        return repository.save(mapper.convertValue(request, Quiosque.class));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class QuiosqueServiceImpl implements QuiosqueService {
     @Override
     public Quiosque findByIdOpt(UUID id) {
         return repository.findById(id).orElseThrow(
-            () -> new NotFoundException(ProvedorError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
+            () -> new NotFoundException(GeralError.NAO_ENCONTRADO.getCodeErro()));
     }
 
     @Override

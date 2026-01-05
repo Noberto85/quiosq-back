@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro Concluído</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        overflow: hidden; /* Prevent scrolling in kiosk mode */
+    }
+
+    .container {
+        background-color: white;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 90%;
+        width: 500px;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .icon-circle {
+        width: 100px;
+        height: 100px;
+        background-color: #4CAF50;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 2rem auto;
+        animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .check-icon {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    p {
+        color: #666;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+
+    .loader {
+        height: 4px;
+        width: 100%;
+        background-color: #eee;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 1rem;
+    }
+
+    .loader-bar {
+        height: 100%;
+        background-color: #4CAF50;
+        width: 0%;
+        transition: width 1s linear;
+    }
+
+    .timer-text {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 10px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="icon-circle">
+    <svg class="check-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  </div>
+  <h1>Obrigado!</h1>
+  <p>Seu cadastro foi realizado com sucesso.</p>
+</div>
+
+</body>
+</html>

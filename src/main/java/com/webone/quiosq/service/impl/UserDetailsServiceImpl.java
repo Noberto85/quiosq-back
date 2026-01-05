@@ -1,4 +1,4 @@
-package com.webone.quiosq.service;
+package com.webone.quiosq.service.impl;
 
 import com.webone.quiosq.entity.User;
 import com.webone.quiosq.exception.UnauthorizedException;
