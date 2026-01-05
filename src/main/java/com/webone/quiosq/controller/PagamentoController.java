@@ -1,6 +1,7 @@
 package com.webone.quiosq.controller;
 
 
+import com.webone.quiosq.dto.PagamentoResponse;
 import com.webone.quiosq.dto.StatusPagamento;
 import com.webone.quiosq.service.PagamentoService;
 import lombok.AllArgsConstructor;
@@ -19,9 +20,9 @@ public class PagamentoController {
     private final PagamentoService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<StatusPagamento> getStatusById(
+    public ResponseEntity<PagamentoResponse> getPagamentoApi(
         @PathVariable("id") Long id) {
-        return new ResponseEntity<>(service.getStatusById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.getPagamentoByPedidoId(id), HttpStatus.OK);
     }
 
 }

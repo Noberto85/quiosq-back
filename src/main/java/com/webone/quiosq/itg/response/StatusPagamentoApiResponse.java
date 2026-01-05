@@ -12,14 +12,14 @@ public class StatusPagamentoApiResponse {
     private String status;
     private String statusDetail;
     private TransactionDetails transactionDetails;
+    private TransactionData transactionData;
 
 
     @Data
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class TransactionDetails {
-
         private String transactionId;
-
     }
+
 }
 

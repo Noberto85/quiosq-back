@@ -16,6 +16,7 @@ import com.webone.quiosq.service.AuthService;
 import com.webone.quiosq.service.ClienteService;
 import com.webone.quiosq.service.QuiosqueService;
 import com.webone.quiosq.service.RoleService;
+import com.webone.quiosq.service.SystemRoleService;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
@@ -33,9 +34,11 @@ public class ClienteServiceImpl implements ClienteService {
     private final ObjectMapper mapper;
     private final RoleService roleService;
     private final AuthService authService;
+    private final SystemRoleService systemRoleService;
 
     @Override
     public RecoveryJwtTokenDto save(ClienteRequest request) {
+
         Cliente cliente = null;
         Optional<Cliente> optCliente = repository.findByTelefone(
             request.getTelefone());
@@ -76,6 +79,7 @@ public class ClienteServiceImpl implements ClienteService {
             .telefone(cliente.getTelefone())
             .quiosqueId(request.getQuiosqueId())
             .mesa(request.getMesa())
+            .taxa(systemRoleService.getTaxa())
             .build();
         return authService.authenticateClient(build);
 

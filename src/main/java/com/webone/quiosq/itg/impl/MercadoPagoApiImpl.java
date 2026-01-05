@@ -73,12 +73,13 @@ public class MercadoPagoApiImpl implements MercadoApiService {
     }
 
     @Override
-    public StatusPagamentoApiResponse verificaStatus(String accessToken, Long id) {
+    public PagamentoApiResponse getApiPagamento(String accessToken, Long id) {
         HeaderApi headerApi = new HeaderApi();
         headerApi.setToken(accessToken);
         String url = String.format("%s/%s", PATH_AUTH_PAYMENT, id);
-        return get(url, headerApi, StatusPagamentoApiResponse.class);
+        return get(url, headerApi, PagamentoApiResponse.class);
     }
+
 
     private <OUT> OUT get(String path, HeaderApi headerApi, Class<OUT> responseType) {
         HttpHeaders headers = getHttpHeaders(headerApi);

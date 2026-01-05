@@ -7,7 +7,7 @@ import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import com.webone.quiosq.exception.CodeErro.NaoAutorizadoError;
 import com.webone.quiosq.exception.NaoAutorizadoException;
 import com.webone.quiosq.itg.MercadoApiService;
-import com.webone.quiosq.itg.response.StatusPagamentoApiResponse;
+import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.repository.PagamentoRepository;
 import com.webone.quiosq.service.MercadoPagoTokenService;
 import com.webone.quiosq.service.WebhookService;
@@ -56,7 +56,7 @@ public class WebhookServiceImpl implements WebhookService {
                 if (payload.getAction().equals(PAYMENT_UPDATED)) {
                     final MercadoPagoToken mercadoPagoToken = mercadoPagoTokenService.findById(
                         payload.getUserId());
-                    final var status = mercadoApiService.verificaStatus(
+                    final var status = mercadoApiService.getApiPagamento(
                         mercadoPagoToken.getAccessToken(),
                         Long.parseLong(payload.getData().getId()));
 
@@ -82,11 +82,11 @@ public class WebhookServiceImpl implements WebhookService {
         }
     }
 
-    private void updatePagamento(StatusPagamentoApiResponse payload, StatusPedidoEnum status) {
+    private void updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status) {
         updatePagamento(payload, status, null);
     }
 
-    private void updatePagamento(StatusPagamentoApiResponse payload, StatusPedidoEnum status,
+    private void updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status,
         LocalDateTime dataApro) {
         Optional<Pagamento> byMpPagId = repository.findByMpPagId(
             payload.getId());

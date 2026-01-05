@@ -30,7 +30,7 @@ public class JwtTokenService {
     private static final String NUMERO_MESA = "numeroMesa";
     private static final String MESA_ID = "mesaId";
     private static final String SUB = "sub";
-    private static final String NOME = "nome";
+    private static final String TAXA = "taxa";
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
@@ -69,6 +69,7 @@ public class JwtTokenService {
                 .withExpiresAt(expirationDateClient())
                 .withSubject(user.getTelefone())
                 .withClaim(NUMERO_MESA, user.getMesa())
+                .withClaim(TAXA, user.getTaxa().toString())
                 .withClaim(MESA_ID, mesaId)
                 .withClaim(QUIOSQUE_ID, user.getQuiosqueId().toString())
                 .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))

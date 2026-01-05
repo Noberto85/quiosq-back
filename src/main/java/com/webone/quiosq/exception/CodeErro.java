@@ -109,6 +109,11 @@ public class CodeErro {
             new CodeErro(-6001, "Pagamento Não encotrado", Constants.SEM_DETALHES,
                 HttpStatus.NOT_FOUND)
 
+        ),
+        PAGAMENTO_EXPIRADO_ERROR(
+            new CodeErro(-6002, "Pagamento expirado ou cancelado!", Constants.SEM_DETALHES,
+                HttpStatus.NOT_FOUND)
+
         );
 
         private final CodeErro codeErro;
