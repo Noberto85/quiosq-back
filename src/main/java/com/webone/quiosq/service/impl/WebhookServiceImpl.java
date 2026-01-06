@@ -35,6 +35,7 @@ public class WebhookServiceImpl implements WebhookService {
     private final PixStatusBroadcaster broadcaster;
     private final String whSecret;
 
+
     public WebhookServiceImpl(PagamentoRepository repository,
         MercadoPagoTokenService mercadoPagoTokenService, MercadoApiService mercadoApiService,
         PixStatusBroadcaster broadcaster, @Value("${webhook.secret}") String whSecret) {
@@ -43,6 +44,7 @@ public class WebhookServiceImpl implements WebhookService {
         this.mercadoApiService = mercadoApiService;
         this.broadcaster = broadcaster;
         this.whSecret = whSecret;
+
     }
 
 
@@ -61,15 +63,22 @@ public class WebhookServiceImpl implements WebhookService {
                         Long.parseLong(payload.getData().getId()));
 
                     switch (status.getStatus()) {
+
                         case APPROVED:
-                            updatePagamento(status, StatusPedidoEnum.EM_PREPARACAO,
+                            var pag = updatePagamento(status, StatusPedidoEnum.EM_PREPARACAO,
                                 LocalDateTime.now());
-                            broadcaster.broadcast("{\"status\":\"approved\"}");
+                            broadcaster.broadcastToPayment(pag.getId().toString(),
+                                "{\"status\":\"approved\"}");
                             return;
                         case REJECTED:
-                            updatePagamento(status, StatusPedidoEnum.CANCELADO);
+                            pag = updatePagamento(status, StatusPedidoEnum.CANCELADO);
+                            broadcaster.broadcastToPayment(pag.getId().toString(),
+                                "{\"status\":\"rejected\"}");
                             return;
                         case CANCELLED:
+                            pag = updatePagamento(status, StatusPedidoEnum.CANCELADO);
+                            broadcaster.broadcastToPayment(pag.getId().toString(),
+                                "{\"status\":\"cancelled\"}");
                             updatePagamento(status, StatusPedidoEnum.CANCELADO);
 
                     }
@@ -82,11 +91,11 @@ public class WebhookServiceImpl implements WebhookService {
         }
     }
 
-    private void updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status) {
-        updatePagamento(payload, status, null);
+    private Pagamento updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status) {
+        return updatePagamento(payload, status, null);
     }
 
-    private void updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status,
+    private Pagamento updatePagamento(PagamentoApiResponse payload, StatusPedidoEnum status,
         LocalDateTime dataApro) {
         Optional<Pagamento> byMpPagId = repository.findByMpPagId(
             payload.getId());
@@ -96,7 +105,7 @@ public class WebhookServiceImpl implements WebhookService {
         pagamento.setStatusDetail(payload.getStatusDetail());
         pagamento.getPedido().setStatus(status);
         pagamento.setTransactionId(payload.getTransactionDetails().getTransactionId());
-        repository.save(pagamento);
+        return repository.save(pagamento);
     }
 
     private boolean secretValidation(Map<String, String> headers,

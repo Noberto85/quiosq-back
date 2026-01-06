@@ -13,6 +13,5 @@ public enum StatusPedidoEnum {
     CANCELADO("cancelled");
 
     private String descricao;
-
-
+    
 }

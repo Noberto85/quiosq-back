@@ -12,5 +12,4 @@ public interface PagamentoService {
 
     PagamentoResponse getPagamentoByPedidoId(Long id);
 
-
 }

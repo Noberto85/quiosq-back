@@ -3,9 +3,9 @@ package com.webone.quiosq.service.impl;
 import com.webone.quiosq.dto.PagamentoResponse;
 import com.webone.quiosq.dto.StatusPagamento;
 import com.webone.quiosq.entity.Pagamento;
+import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import com.webone.quiosq.exception.CodeErro.PagamentoError;
 import com.webone.quiosq.exception.NotFoundException;
-import com.webone.quiosq.exception.PagamentoException;
 import com.webone.quiosq.itg.MercadoApiService;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.repository.PagamentoRepository;
@@ -45,9 +45,20 @@ public class PagamentoServiceImpl implements PagamentoService {
             pagamento.getMpPagId());
 
         if (!apiPagamento.getStatus().equals(PENDING)) {
-            throw new PagamentoException(PagamentoError.PAGAMENTO_EXPIRADO_ERROR.getCodeErro());
+            pagamento.setStatus(apiPagamento.getStatus());
+            pagamento.setStatusDetail(apiPagamento.getStatusDetail());
+            pagamento.getPedido().setStatus(getStatus(apiPagamento.getStatus()));
+            repository.save(pagamento);
+
         }
         return new PagamentoResponse(apiPagamento, pagamento.getId());
     }
 
+    private StatusPedidoEnum getStatus(String status) {
+        if (status.equals("approved")) {
+            return StatusPedidoEnum.EM_PREPARACAO;
+        } else {
+            return StatusPedidoEnum.CANCELADO;
+        }
+    }
 }
