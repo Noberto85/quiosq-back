@@ -54,6 +54,10 @@ public class Pedido {
     private Quiosque quiosque;
 
     @ManyToOne
+    @JoinColumn(name = "garcom_id")
+    private Garcom garcom;
+
+    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 

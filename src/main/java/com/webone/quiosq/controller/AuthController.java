@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(
-        @RequestBody LoginUserDto loginUserDto) {
+        @RequestBody LoginUserDto loginUserDto) throws InterruptedException {
         return new ResponseEntity<>(authService.authenticateUser(loginUserDto), HttpStatus.OK);
     }
 

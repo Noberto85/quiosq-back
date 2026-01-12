@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,11 +30,17 @@ public class Garcom {
     private String nome;
     @Column(nullable = false)
     private String cpf;
+    @Column(nullable = false)
+    private Boolean ativo;
 
-  //  private byte[] foto;
     @ManyToOne
     @JoinColumn(name = "quiosque_id")
     private Quiosque quiosque;
+
+    @PrePersist
+    public void prePersist(){
+        this.ativo = Boolean.TRUE;
+    }
 
 }
 

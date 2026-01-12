@@ -1,12 +1,8 @@
 package com.webone.quiosq.exception.handler;
 
 
-import com.webone.quiosq.exception.LoginException;
+import com.webone.quiosq.exception.BaseException;
 import com.webone.quiosq.exception.MessageException;
-import com.webone.quiosq.exception.NotFoundException;
-import com.webone.quiosq.exception.PagamentoException;
-import com.webone.quiosq.exception.SqlException;
-import com.webone.quiosq.exception.UnauthorizedException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -16,23 +12,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 @RestControllerAdvice
 public class ControllerExpectionHandler {
 
-
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> notFound(NotFoundException ex) {
-        final var builder = MessageException.builder()
-            .cod(ex.getCode())
-            .details(ex.getDetail())
-            .message(ex.getMessage())
-            .status(ex.getHttpStatus())
-            .build();
-        return ResponseEntity.status(ex.getHttpStatus()).body(builder);
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -47,30 +30,8 @@ public class ControllerExpectionHandler {
         return errors;
     }
 
-    @ExceptionHandler(SqlException.class)
-    public ResponseEntity<?> notFound(SqlException ex) {
-        final var builder = MessageException.builder()
-            .cod(ex.getCode())
-            .details(ex.getDetail())
-            .message(ex.getMessage())
-            .status(ex.getHttpStatus())
-            .build();
-        return ResponseEntity.status(ex.getHttpStatus()).body(builder);
-    }
-
-    @ExceptionHandler(LoginException.class)
-    public ResponseEntity<?> notFound(LoginException ex) {
-        final var builder = MessageException.builder()
-            .cod(ex.getCode())
-            .details(ex.getDetail())
-            .message(ex.getMensagem())
-            .status(ex.getHttpStatus())
-            .build();
-        return ResponseEntity.status(ex.getHttpStatus()).body(builder);
-    }
-
-    @ExceptionHandler(PagamentoException.class)
-    public ResponseEntity<?> notFound(PagamentoException ex) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<?> notFound(BaseException ex) {
         final var builder = MessageException.builder()
             .cod(ex.getCode())
             .details(ex.getDetail())

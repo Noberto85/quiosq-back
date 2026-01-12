@@ -86,7 +86,7 @@ public class WebhookServiceImpl implements WebhookService {
                 }
             } else {
                 throw new NaoAutorizadoException(
-                    NaoAutorizadoError.SUSPEIRA_FRAUDE_ERROR.getCodeErro());
+                    NaoAutorizadoError.SUSPEITA_FRAUDE_ERROR.getCodeErro());
             }
         }
     }
