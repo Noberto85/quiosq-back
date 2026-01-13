@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum StatusPedidoEnum {
     AGUARDANDO_PAGAMENTO("pending"),
+    AGUARDANDO_PREPARO("awaiting_preparation"),
     EM_PREPARACAO("preparing"),
     PRONTO("delivering"),
     ENTREGUE("completed"),

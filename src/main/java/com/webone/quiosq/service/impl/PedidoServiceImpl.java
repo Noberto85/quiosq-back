@@ -4,10 +4,13 @@ import com.webone.quiosq.controller.request.PedidoRequest;
 import com.webone.quiosq.controller.response.PedidoResponse;
 import com.webone.quiosq.dto.ItemDTO;
 import com.webone.quiosq.dto.PagamentoResponse;
+import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Pagamento;
 import com.webone.quiosq.entity.Pedido;
+import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import com.webone.quiosq.exception.CodeErro.PedidoError;
 import com.webone.quiosq.exception.CodeErro.RoleError;
+import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.exception.SqlException;
 import com.webone.quiosq.handler.PagamentoHandle;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
@@ -26,6 +29,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -82,6 +89,31 @@ public class PedidoServiceImpl implements PedidoService {
                 LocalDateTime.now().minusHours(12),
                 LocalDateTime.now().plusHours(12)).stream().map(PedidoResponse::new)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public PageableDto<PedidoResponse> findAllByPageableSpec(Specification<Pedido> spec,
+        Integer page, Integer size, String orderBy, String direction) {
+        final var pageRequest = PageRequest.of(page, size,
+            Sort.by(Sort.Direction.valueOf(direction), orderBy));
+        Page<PedidoResponse> maplis = pedidoRepository.findAll(spec, pageRequest)
+            .map(PedidoResponse::new);
+        return new PageableDto<>(maplis);
+    }
+
+    @Override
+    public void updateStatus(Long id, StatusPedidoEnum status) {
+        final Pedido pedido = findById(id);
+        pedido.setStatus(status);
+        if (status.equals(StatusPedidoEnum.ENTREGUE)){
+            pedido.setDataFim(LocalDateTime.now());
+        }
+        pedidoRepository.save(pedido);
+    }
+
+    private Pedido findById(Long id) {
+        return pedidoRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(PedidoError.PEDIDO_ERROR.getCodeErro()));
     }
 
     private static String buildItensList(List<ItemDTO> itens) {

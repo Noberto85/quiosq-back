@@ -56,7 +56,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     private StatusPedidoEnum getStatus(String status) {
         if (status.equals("approved")) {
-            return StatusPedidoEnum.EM_PREPARACAO;
+            return StatusPedidoEnum.AGUARDANDO_PREPARO;
         } else {
             return StatusPedidoEnum.CANCELADO;
         }

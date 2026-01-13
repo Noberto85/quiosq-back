@@ -65,7 +65,7 @@ public class WebhookServiceImpl implements WebhookService {
                     switch (status.getStatus()) {
 
                         case APPROVED:
-                            var pag = updatePagamento(status, StatusPedidoEnum.EM_PREPARACAO,
+                            var pag = updatePagamento(status, StatusPedidoEnum.AGUARDANDO_PREPARO,
                                 LocalDateTime.now());
                             broadcaster.broadcastToPayment(pag.getId().toString(),
                                 "{\"status\":\"approved\"}");
