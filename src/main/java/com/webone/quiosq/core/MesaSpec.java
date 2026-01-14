@@ -1,7 +1,6 @@
 package com.webone.quiosq.core;
 
 import com.webone.quiosq.entity.Mesa;
-import com.webone.quiosq.entity.Pedido;
 import java.util.UUID;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,6 +9,7 @@ public class MesaSpec {
 
     private static final String NUMERO = "numero";
     private static final String QUIOSQUE = "quiosque";
+    private static final String ATIVO = "ativo";
 
     public static Specification<Mesa> numero(String numero) {
 
@@ -29,6 +29,15 @@ public class MesaSpec {
                 return null;
             }
             return builder.equal(root.get(QUIOSQUE).get("id"), quiosqueId);
+        };
+    }
+
+    public static Specification<Mesa> colAtivo(Boolean ativo) {
+        return (root, query, builder) -> {
+            if (ObjectUtils.isEmpty(ativo)) {
+                return builder.equal(root.get(ATIVO), Boolean.TRUE);
+            }
+            return builder.equal(root.get(ATIVO), ativo);
         };
     }
 

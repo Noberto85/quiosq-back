@@ -9,6 +9,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,44 +52,16 @@ public class AdminMesaController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}/disable")
+    public ResponseEntity<Void> disable(@PathVariable("id") Long id) {
+        service.disable(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/update")
-    public ResponseEntity<Void> update(
-        @RequestBody MesaRequest request) {
+    public ResponseEntity<Void> update(@RequestBody MesaRequest request) {
         service.update(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-
-
-    /*@DeleteMapping("/{novoGarcom}/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("novoGarcom") Long novoGarcom,
-        @PathVariable("id") Long id) {
-        service.disable(novoGarcom, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("findAllNotEquals/{quiosqueId}/{id}")
-    public ResponseEntity<List<GarcomSelectResponse>> findAllNOtEqualsId(
-        @PathVariable("quiosqueId") UUID quiosqueId,
-        @PathVariable("id") Long id) {
-        return new ResponseEntity<>(
-            service.findAllNOtEqualsId(quiosqueId, id),
-            HttpStatus.OK);
-    }
-
-    @PutMapping("/activate")
-    public ResponseEntity<Void> activate(
-        @RequestBody GarcomRequest request) {
-        service.activate(request.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<Void> edit(
-        @RequestBody GarcomRequest request) {
-        service.edit(request.getId(), request.getNome());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }*/
-
 
 }

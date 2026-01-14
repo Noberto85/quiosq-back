@@ -91,4 +91,13 @@ public class CodeErro {
         private final CodeErro codeErro;
         MesaError(CodeErro codeErro) { this.codeErro = codeErro; }
     }
+
+    // ------------------- ERROS MESA -------------------
+    @Getter
+    public enum CategoriaError {
+        CATEGORIA_NAO_ENCONTRADO_ERROR(new CodeErro(-9001, "Categoria não encontrado!", Constants.SEM_DETALHES, HttpStatus.CONFLICT));
+
+        private final CodeErro codeErro;
+        CategoriaError(CodeErro codeErro) { this.codeErro = codeErro; }
+    }
 }

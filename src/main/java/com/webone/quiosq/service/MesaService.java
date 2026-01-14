@@ -28,4 +28,6 @@ public interface MesaService {
     void create(MesaRequest request, UUID quiosqueID);
 
     void update(MesaRequest request);
+
+    void disable(Long id);
 }

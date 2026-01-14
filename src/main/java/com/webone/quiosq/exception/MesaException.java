@@ -7,6 +7,11 @@ public class MesaException extends BaseException {
             erro.getDetails(), erro.getHttpStatus());
     }
 
+    public MesaException(CodeErro erro) {
+        super(erro.getMessage(), erro.getCod(),
+            erro.getDetails(), erro.getHttpStatus());
+    }
+
     private static String format(String value, Integer numero){
         return String.format(value,numero);
     }

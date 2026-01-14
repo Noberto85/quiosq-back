@@ -117,4 +117,16 @@ public class MesaServiceImpl implements MesaService {
 
 
     }
+
+    @Override
+    public void disable(Long id) {
+        var mesa = mesaRepository.findById(id)
+            .orElseThrow(() -> new MesaException(
+                MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro()));
+
+        mesa.setGarcom(null);
+        mesa.setStatus(StatusMesaEnum.LIVRE);
+        mesa.setAtivo(Boolean.FALSE);
+        mesaRepository.save(mesa);
+    }
 }

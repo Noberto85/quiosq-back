@@ -28,7 +28,7 @@ public class SecurityConfiguration {
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-        "/success.html", "/api/webhook/**",
+        "/success.html", "/api/webhook/**", "/api/v1/cliente",
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
         "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/auth/**",
         "/ws/pix/**"
@@ -36,12 +36,12 @@ public class SecurityConfiguration {
 
 
     private static final String[] ENDPOINTS_WITH_ADMIN = {
-        "/api/v1/admin/garcom/**","/api/v1/admin/pedido/**","/api/v1/admin/mesa/**"
+        "/api/v1/admin/garcom/**", "/api/v1/admin/pedido/**", "/api/v1/admin/mesa/**"
+        , "/api/v1/cardapio/**" ,"/api/v1/admin/item_cardapio/**"
     };
 
     private static final String[] ENDPOINTS_CLIENTE_ADMIN = {
-        "/api/v1/cardapio/**", "/api/v1/categoria", "/api/v1/pagamento/**", "/api/v1/pedido/**",
-        "/api/v1/cliente"
+        "/api/v1/cardapio/**", "/api/v1/categoria", "/api/v1/pagamento/**", "/api/v1/pedido/**"
     };
 
     @Bean

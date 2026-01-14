@@ -1,0 +1,6 @@
+
+ALTER TABLE tb_mesa
+ADD COLUMN ativo BOOLEAN;
+
+
+

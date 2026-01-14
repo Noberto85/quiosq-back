@@ -1,6 +1,7 @@
 package com.webone.quiosq.controller.response;
 
 
+import com.webone.quiosq.dto.CategoriaDto;
 import com.webone.quiosq.entity.ItemCardapio;
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class ItemCardapioResponse {
     private String urlImagem;
     private Integer avaliacao;
     private String categoria;
+    private CategoriaDto categoriaDto;
 
 
     public ItemCardapioResponse(ItemCardapio itemCardapio) {
@@ -28,5 +30,6 @@ public class ItemCardapioResponse {
         this.urlImagem = itemCardapio.getUrlImagem();
         this.avaliacao = itemCardapio.getAvaliacao();
         this.categoria = itemCardapio.getCategoria().getDescricao();
+        this.categoriaDto = new CategoriaDto(itemCardapio.getCategoria());
     }
 }
