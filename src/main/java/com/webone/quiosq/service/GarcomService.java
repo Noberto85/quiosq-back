@@ -26,4 +26,8 @@ public interface GarcomService {
 
     void edit(Long id, String nome);
 
+    List<GarcomSelectResponse> findAllWithStatusTrue( UUID quiosqueId);
+
+    Garcom findById(Long id);
+
 }

@@ -18,7 +18,7 @@ public class PedidoQueryFilter {
     private String search;
 
     public Specification<Pedido> toSpecification(UUID quiosqueID) {
-        return (codigoContains(search).or(status(status).or(nomePedido(search))))
+       return (codigoContains(search).or(status(status).or(nomePedido(search))))
             .and(equalQuiosqueId(quiosqueID));
     }
 }

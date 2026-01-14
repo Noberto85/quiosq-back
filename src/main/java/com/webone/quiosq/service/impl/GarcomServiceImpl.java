@@ -97,13 +97,20 @@ public class GarcomServiceImpl implements GarcomService {
         repository.save(garcom);
     }
 
+    @Override
+    public List<GarcomSelectResponse> findAllWithStatusTrue(UUID quiosqueId) {
+        return repository.findAllWithStatusTrue(quiosqueId).stream().map(GarcomSelectResponse::new)
+            .collect(Collectors.toList());
+    }
+
     private Garcom findByCpf(String cpf, UUID quiosqueId) {
         return repository.findByCpfAndQuiosqueId(cpf, quiosqueId)
             .orElseThrow(() -> new NotFoundException(
                 GeralError.NAO_ENCONTRADO.getCodeErro()));
     }
 
-    private Garcom findById(Long id) {
+    @Override
+    public Garcom findById(Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new NotFoundException(GeralError.NAO_ENCONTRADO.getCodeErro()));
     }

@@ -12,7 +12,6 @@ public class PedidoSpec {
     private static final String STATUS = "status";
     private static final String CODIGO = "codigo";
     private static final String QUIOSQUE = "quiosque";
-    private static final String CLIENTE = "cliente";
 
     public static Specification<Pedido> codigoContains(String codigo) {
 
@@ -32,7 +31,8 @@ public class PedidoSpec {
             if (ObjectUtils.isEmpty(nome)) {
                 return null;
             }
-            return builder.like(builder.lower(root.get(NOME_PEDIDO)), "%" + nome.toLowerCase() + "%");
+            return builder.like(builder.lower(root.get(NOME_PEDIDO)),
+                "%" + nome.toLowerCase() + "%");
         };
     }
 

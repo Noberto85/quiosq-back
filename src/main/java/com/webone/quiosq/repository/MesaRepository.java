@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface MesaRepository extends JpaRepository<Mesa, Long> {
+public interface MesaRepository extends JpaRepository<Mesa, Long>,
+    JpaSpecificationExecutor<Mesa> {
 
     @Query(value = "SELECT * FROM func_get_mesa_info(:quiosqueId, :mesaId)", nativeQuery = true)
     Optional<MesaInfoProjection> getMesaInfo(@Param("quiosqueId") UUID quiosqueId,
@@ -20,6 +22,10 @@ public interface MesaRepository extends JpaRepository<Mesa, Long> {
     Optional<Long> getID(@Param("quiosqueId") UUID quiosqueId, @Param("numero") Integer numero);
 
     List<Mesa> findByGarcom(Garcom garcom);
+
+    @Query("SELECT m FROM Mesa m JOIN m.quiosque qui WHERE  m.numero =:numero and qui.id =:quiosqueId ")
+    Optional<Mesa> findByNumeroAndQuiosque(@Param("quiosqueId") UUID quiosqueId,
+        @Param("numero") Integer numero);
 
 
 }

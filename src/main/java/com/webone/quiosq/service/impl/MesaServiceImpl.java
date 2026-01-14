@@ -1,23 +1,42 @@
 package com.webone.quiosq.service.impl;
 
+import com.webone.quiosq.controller.request.MesaRequest;
+import com.webone.quiosq.controller.response.MesaResponse;
 import com.webone.quiosq.dto.MesaProjectionDto;
+import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Garcom;
 import com.webone.quiosq.entity.Mesa;
+import com.webone.quiosq.entity.Quiosque;
+import com.webone.quiosq.entity.enums.StatusMesaEnum;
+import com.webone.quiosq.exception.CodeErro.GeralError;
+import com.webone.quiosq.exception.CodeErro.MesaError;
 import com.webone.quiosq.exception.CodeErro.QuiosqueError;
+import com.webone.quiosq.exception.GarcomException;
+import com.webone.quiosq.exception.MesaException;
 import com.webone.quiosq.exception.NotFoundException;
+import com.webone.quiosq.exception.QuiosqueException;
 import com.webone.quiosq.projection.MesaInfoProjection;
+import com.webone.quiosq.repository.GarcomRepository;
 import com.webone.quiosq.repository.MesaRepository;
+import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.MesaService;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class MesaServiceImpl implements MesaService {
 
-    private MesaRepository mesaRepository;
+    private final GarcomRepository repository;
+    private final MesaRepository mesaRepository;
+    private final QuiosqueRepository quiosqueRepository;
 
     @Override
     public void salvar(List<Mesa> mesalist) {
@@ -44,5 +63,58 @@ public class MesaServiceImpl implements MesaService {
     @Override
     public List<Mesa> findByGarcom(Garcom garcom) {
         return mesaRepository.findByGarcom(garcom);
+    }
+
+    @Override
+    public PageableDto<MesaResponse> findAllByPageableSpec(Specification<Mesa> spec, Integer page,
+        Integer size, String orderBy, String direction) {
+        final var pageRequest = PageRequest.of(page, size,
+            Sort.by(Sort.Direction.valueOf(direction), orderBy));
+        Page<MesaResponse> maplis = mesaRepository.findAll(spec, pageRequest)
+            .map(MesaResponse::new);
+        return new PageableDto<>(maplis);
+    }
+
+    @Override
+    public void create(MesaRequest request, UUID quiosqueID) {
+        final Optional<Mesa> mesaOpt = mesaRepository.findByNumeroAndQuiosque(
+            quiosqueID, request.getNumero());
+        if (mesaOpt.isPresent()) {
+            throw new MesaException(MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro(),
+                request.getNumero());
+        }
+        var garcomOpt = repository.findById(request.getGarcomId());
+        if (garcomOpt.isEmpty()) {
+            throw new GarcomException(GeralError.NAO_ENCONTRADO.getCodeErro());
+        }
+        final Optional<Quiosque> quiosqueOpt = quiosqueRepository.findById(quiosqueID);
+        if (quiosqueOpt.isEmpty()) {
+            throw new QuiosqueException(QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro());
+        }
+        var quiosque = quiosqueOpt.get();
+        var garcom = garcomOpt.get();
+        var mesa = Mesa.builder()
+            .garcom(garcom)
+            .numero(request.getNumero())
+            .status(StatusMesaEnum.LIVRE)
+            .quiosque(quiosque)
+            .build();
+        mesaRepository.save(mesa);
+
+    }
+
+    @Override
+    public void update(MesaRequest request) {
+        var mesa = mesaRepository.findById(request.getId())
+            .orElseThrow(() -> new MesaException(
+                MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro(), request.getNumero()));
+        var garcomOpt = repository.findById(request.getGarcomId());
+        if (garcomOpt.isEmpty()) {
+            throw new GarcomException(GeralError.NAO_ENCONTRADO.getCodeErro());
+        }
+        mesa.setGarcom(garcomOpt.get());
+        mesaRepository.save(mesa);
+
+
     }
 }

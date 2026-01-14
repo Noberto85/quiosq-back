@@ -68,8 +68,7 @@ public class CodeErro {
     // ------------------- ERROS PAGAMENTO -------------------
     @Getter
     public enum PagamentoError {
-        PAGAMENTO_ERROR(new CodeErro(-6001, "Pagamento não encontrado", Constants.SEM_DETALHES, HttpStatus.NOT_FOUND)),
-        PAGAMENTO_EXPIRADO_ERROR(new CodeErro(-6002, "Pagamento expirado ou cancelado", Constants.SEM_DETALHES, HttpStatus.NOT_FOUND));
+        PAGAMENTO_ERROR(new CodeErro(-6001, "Pagamento não encontrado", Constants.SEM_DETALHES, HttpStatus.NOT_FOUND));
 
         private final CodeErro codeErro;
         PagamentoError(CodeErro codeErro) { this.codeErro = codeErro; }
@@ -82,5 +81,14 @@ public class CodeErro {
 
         private final CodeErro codeErro;
         NaoAutorizadoError(CodeErro codeErro) { this.codeErro = codeErro; }
+    }
+
+    // ------------------- ERROS MESA -------------------
+    @Getter
+    public enum MesaError {
+        NUMERO_CADASTRADO_ERROR(new CodeErro(-8001, "A mesa %s ja vinculado a outro Garcom!", Constants.SEM_DETALHES, HttpStatus.CONFLICT));
+
+        private final CodeErro codeErro;
+        MesaError(CodeErro codeErro) { this.codeErro = codeErro; }
     }
 }

@@ -20,7 +20,12 @@ public interface GarcomRepository extends JpaRepository<Garcom, Long>,
         + "JOIN g.quiosque q " +
         "WHERE g.id <> :id AND g.ativo = true AND q.id =:quiosqueId " +
         "ORDER BY g.nome ASC")
-    List<Garcom> findAllByOrderByNomeAsc(@Param("quiosqueId") UUID quiosqueId,@Param("id") Long id);
+    List<Garcom> findAllByOrderByNomeAsc(@Param("quiosqueId") UUID quiosqueId,
+        @Param("id") Long id);
+
+    @Query("SELECT g FROM Garcom g JOIN g.quiosque q "
+        + "WHERE g.ativo is true AND q.id =:quiosqueId ORDER BY g.nome")
+    List<Garcom> findAllWithStatusTrue(@Param("quiosqueId") UUID quiosqueId);
 
 
 }
