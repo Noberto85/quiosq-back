@@ -3,6 +3,7 @@ package com.webone.quiosq.exception.handler;
 
 import com.webone.quiosq.exception.BaseException;
 import com.webone.quiosq.exception.MessageException;
+import com.webone.quiosq.exception.SqlException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class ControllerExpectionHandler {
         return errors;
     }
 
+    //SqlException
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<?> notFound(BaseException ex) {
         final var builder = MessageException.builder()
@@ -39,6 +41,14 @@ public class ControllerExpectionHandler {
             .status(ex.getHttpStatus())
             .build();
         return ResponseEntity.status(ex.getHttpStatus()).body(builder);
+    }
+
+    @ExceptionHandler(SqlException.class)
+    public ResponseEntity<?> notFound(SqlException ex) {
+        final var builder = MessageException.builder()
+            .message(ex.getMessage())
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(builder);
     }
 
 }

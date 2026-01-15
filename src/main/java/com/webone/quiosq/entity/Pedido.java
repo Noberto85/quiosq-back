@@ -69,5 +69,7 @@ public class Pedido {
 
     private LocalDateTime dataFim;
 
+    private LocalDateTime dataContagem;
+
 }
 

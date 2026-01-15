@@ -55,7 +55,7 @@ public class PedidoServiceImpl implements PedidoService {
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
             if (pedido.isEmpty()) {
-                throw new SqlException(PedidoError.PEDIDO_ERROR.getCodeErro());
+                throw new NotFoundException(PedidoError.PEDIDO_ERROR.getCodeErro());
             }
             request.setPedidoId(pedido.get().getPedidoId());
             request.setCodePedido(pedido.get().getCodigoPedido());
@@ -73,7 +73,7 @@ public class PedidoServiceImpl implements PedidoService {
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new SqlException(RoleError.PERFIL_NAO_ENCONTRADO.getCodeErro(), e.getMessage());
+            throw new NotFoundException(RoleError.PERFIL_NAO_ENCONTRADO.getCodeErro());
         }
     }
 

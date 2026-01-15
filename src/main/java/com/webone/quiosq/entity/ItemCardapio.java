@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,14 @@ public class ItemCardapio {
     @JoinColumn(name = "quiosque_id")
     @JsonBackReference
     private Quiosque quiosque;
+
+    @Column(nullable = false)
+    private Boolean ativo;
+
+    @PrePersist
+    public void prePersist(){
+        this.ativo = Boolean.TRUE;
+    }
 
 
 }

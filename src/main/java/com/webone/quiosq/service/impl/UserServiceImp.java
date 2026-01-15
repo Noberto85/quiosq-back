@@ -10,8 +10,10 @@ import com.webone.quiosq.entity.Role;
 import com.webone.quiosq.entity.User;
 import com.webone.quiosq.repository.RoleRepository;
 import com.webone.quiosq.repository.UserRepository;
-import com.webone.quiosq.service.QuiosqueService;
+import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.UserService;
+import com.webone.quiosq.exception.CodeErro.GeralError;
+import com.webone.quiosq.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 
 public class UserServiceImp implements UserService {
-    private final QuiosqueService quiosqueService;
+    private final QuiosqueRepository quiosqueRepository;
     private final UserRepository userRepository;
     private final SecurityConfiguration securityConfiguration;
     private final RoleRepository roleRepository;
@@ -39,7 +41,8 @@ public class UserServiceImp implements UserService {
         if (role.isEmpty()) {
             throw new IllegalArgumentException("Role não encontrado");
         }
-        var quiosque = quiosqueService.findByIdOpt(createUserDto.quiosqueId());
+        var quiosque = quiosqueRepository.findById(createUserDto.quiosqueId())
+            .orElseThrow(() -> new NotFoundException(GeralError.NAO_ENCONTRADO.getCodeErro()));
         User newUser = User.builder()
             .email(createUserDto.email())
             .nome(createUserDto.nome())
