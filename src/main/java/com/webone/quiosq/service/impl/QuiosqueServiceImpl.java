@@ -98,17 +98,6 @@ public class QuiosqueServiceImpl implements QuiosqueService {
             .toList();
 
         categoriaRepository.saveAll(listaCat);
-
-        // Criando mesas com IntStream
-        List<Mesa> listMesa = IntStream.rangeClosed(0, 5)
-            .mapToObj(i -> Mesa.builder()
-                .quiosque(quiosque)
-                .numero(i)
-                .status(StatusMesaEnum.LIVRE)
-                .build())
-            .toList();
-
-        mesaRepository.saveAll(listMesa);
     }
 
 }

@@ -51,14 +51,15 @@ public class PedidoServiceImpl implements PedidoService {
 
         try {
 
-            Optional<PedidoProjection> pedido = pedidoRepository.createPedido(request.getNome(),
+                Optional<PedidoProjection> pedidoOpt = pedidoRepository.createPedido(request.getNome(),
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
-            if (pedido.isEmpty()) {
+            if (pedidoOpt.isEmpty()) {
                 throw new NotFoundException(PedidoError.PEDIDO_ERROR.getCodeErro());
             }
-            request.setPedidoId(pedido.get().getPedidoId());
-            request.setCodePedido(pedido.get().getCodigoPedido());
+            var pedido = pedidoOpt.get();
+            request.setPedidoId(pedido.getPedidoId());
+            request.setCodePedido(pedido.getCodigoPedido());
             String accessToken = mercadoPagoTokenService.getAccessToken(request.getQuiosqueId());
             Iterator<PagamentoHandle> iterator = pagamentoHandle.iterator();
             PagamentoApiResponse pagamentoResponse;
@@ -66,9 +67,9 @@ public class PedidoServiceImpl implements PedidoService {
             if (iterator.hasNext()) {
                 PagamentoHandle next = iterator.next();
                 pagamentoResponse = next.handleRequest(request, accessToken);
-                Optional<Pedido> byId = pedidoRepository.findById(pedido.get().getPedidoId());
+                Optional<Pedido> byId = pedidoRepository.findById(pedido.getPedidoId());
                 var pag = pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
-                return new PagamentoResponse(pagamentoResponse, pag.getId());
+                return new PagamentoResponse(pagamentoResponse, pedido.getPedidoId());
             }
             return null;
         } catch (Exception e) {

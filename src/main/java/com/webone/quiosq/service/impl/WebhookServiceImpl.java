@@ -92,8 +92,8 @@ public class WebhookServiceImpl implements WebhookService {
     }
 
     /*
-    * Só para fins de testes
-    * */
+     * Só para fins de testes
+     * */
     @Override
     public void validatePagamentoHml(Long payload) {
         Optional<Pagamento> byMpPagId = repository.findByMpPagId(payload);
@@ -101,8 +101,9 @@ public class WebhookServiceImpl implements WebhookService {
         pagamento.setDataAprovacao(LocalDateTime.now());
         pagamento.setStatus("approved");
         pagamento.setStatusDetail("accredited");
-        pagamento.getPedido().setStatus( StatusPedidoEnum.AGUARDANDO_PREPARO);
+        pagamento.getPedido().setStatus(StatusPedidoEnum.AGUARDANDO_PREPARO);
         pagamento.setTransactionId("123456");
+        pagamento.getPedido().setDataContagem(LocalDateTime.now());
         repository.save(pagamento);
         broadcaster.broadcastToPayment(payload.toString(),
             "{\"status\":\"approved\"}");
@@ -121,6 +122,9 @@ public class WebhookServiceImpl implements WebhookService {
         pagamento.setStatus(payload.getStatus());
         pagamento.setStatusDetail(payload.getStatusDetail());
         pagamento.getPedido().setStatus(status);
+        if (status.equals(StatusPedidoEnum.AGUARDANDO_PREPARO)) {
+            pagamento.getPedido().setDataContagem(LocalDateTime.now());
+        }
         pagamento.setTransactionId(payload.getTransactionDetails().getTransactionId());
         return repository.save(pagamento);
     }

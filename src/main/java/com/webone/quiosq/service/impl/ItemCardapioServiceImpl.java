@@ -19,7 +19,9 @@ import com.webone.quiosq.repository.CategoriaRepository;
 import com.webone.quiosq.repository.ItemCardapioRepository;
 import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.service.ItemCardapioService;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -50,12 +52,20 @@ public class ItemCardapioServiceImpl implements ItemCardapioService {
     }
 
     @Override
+    public List<ItemCardapioResponse> findAllSpec(UUID quiosqueId, String categoria) {
+         return itemCardapioRepository.findAllWithCategoriaAndQuiosque(quiosqueId,categoria).stream()
+            .map(ItemCardapioResponse::new).collect(
+                Collectors.toList());
+
+    }
+
+    @Override
     public void create(ItemCardapioRequest request, UUID quiosqueId) {
         final ItemCardapio itemCardapio = mapper.convertValue(request, ItemCardapio.class);
         Quiosque quiosque = quiosqueRepository.findById(quiosqueId)
             .orElseThrow(() -> new QuiosqueException(
                 QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
-        final Categoria categoria = getCategoria(request.id());
+        final Categoria categoria = getCategoria(request.categoriaId());
         itemCardapio.setCategoria(categoria);
         itemCardapio.setQuiosque(quiosque);
         itemCardapioRepository.save(itemCardapio);
