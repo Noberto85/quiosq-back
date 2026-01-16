@@ -7,11 +7,13 @@ import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.entity.enums.RoleName;
 import com.webone.quiosq.service.MesaService;
+import com.webone.quiosq.service.impl.UserDetailsImpl;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ public class JwtTokenService {
     private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
     private static final String ROLES = "Roles";
     private static final String CLIENTE = "CLIENTE";
+    private static final String USER_NAME = "user_name";
     private static final String QUIOSQUE_ID = "quiosque_id";
     private static final String NUMERO_MESA = "numeroMesa";
     private static final String MESA_ID = "mesaId";
@@ -40,11 +43,15 @@ public class JwtTokenService {
     }
 
     public String generateToken(UserDetails user) {
-
+        UserDetailsImpl userDt = (UserDetailsImpl) user;
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
                 .withIssuer(ISSUER)
+                .withClaim(USER_NAME, userDt.getUser().getNome())
+                .withClaim(QUIOSQUE_ID,
+                    Optional.ofNullable(userDt.getUser().getQuiosque()).map(f -> f.getId().toString())
+                        .orElse(null))
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDate())
                 .withSubject(user.getUsername())

@@ -12,10 +12,12 @@ import com.webone.quiosq.repository.PagamentoRepository;
 import com.webone.quiosq.service.MercadoPagoTokenService;
 import com.webone.quiosq.service.PagamentoService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class PagamentoServiceImpl implements PagamentoService {
 
     private static final String PENDING = "pending";
@@ -25,6 +27,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     public Pagamento create(Pagamento pagamento) {
+
         return repository.save(pagamento);
     }
 
@@ -36,6 +39,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     public PagamentoResponse getPagamentoByPedidoId(Long id) {
+        log.info(">>>>>>>>> ID DO PAGAMENTO {} >>>>>>>>>", id);
         final Pagamento pagamento = repository.getPagamentoByPedidoId(id)
             .orElseThrow(() -> new NotFoundException(
                 PagamentoError.PAGAMENTO_ERROR.getCodeErro()));
@@ -56,7 +60,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     private StatusPedidoEnum getStatus(String status) {
         if (status.equals("approved")) {
-            return StatusPedidoEnum.EM_PREPARACAO;
+            return StatusPedidoEnum.AGUARDANDO_PREPARO;
         } else {
             return StatusPedidoEnum.CANCELADO;
         }

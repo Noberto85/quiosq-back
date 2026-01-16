@@ -54,6 +54,10 @@ public class Pedido {
     private Quiosque quiosque;
 
     @ManyToOne
+    @JoinColumn(name = "garcom_id")
+    private Garcom garcom;
+
+    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
@@ -64,6 +68,8 @@ public class Pedido {
     private LocalDateTime dataInit;
 
     private LocalDateTime dataFim;
+
+    private LocalDateTime dataContagem;
 
 }
 

@@ -16,7 +16,15 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
     @Query("SELECT p.status FROM Pagamento p WHERE p.id =:id")
     Optional<String> getStatusById(@Param("id") Long id);
 
-    @Query("SELECT p FROM Pagamento p JOIN FETCH p.pedido pd WHERE pd.id =:id")
+    @Query("""
+    select p
+    from Pagamento p
+    join fetch p.pedido pe
+    join fetch pe.cliente
+    join fetch pe.garcom
+    join fetch pe.mesa
+    where pe.id = :id
+""")
     Optional<Pagamento> getPagamentoByPedidoId(@Param("id") Long id);
 
 }

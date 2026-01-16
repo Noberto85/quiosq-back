@@ -17,23 +17,31 @@ public class PedidoResponse {
 
     private Long id;
     private String status;
+    private String nomePedido;
     private String codigo;
-    private Integer mesa;
+    private String mesa;
     private List<ItemPedidoDto> itens;
     private LocalDateTime dataInit;
     private LocalDateTime dataFim;
+    private LocalDateTime dataContagem;
     private BigDecimal total;
+    private String cliente;
+    private String observacoes;
 
     public PedidoResponse(Pedido pedido) {
         this.id = pedido.getId();
+        this.nomePedido = pedido.getNomePedido();
         this.status = pedido.getStatus().getDescricao();
         this.codigo = pedido.getCodigo();
-        this.mesa = pedido.getMesa().getNumero();
+        this.mesa = (pedido.getMesa().getNumero() <= 9) ? "0" + pedido.getMesa().getNumero()
+            : pedido.getMesa().getNumero().toString();
+        this.cliente = pedido.getCliente().getTelefone();
         this.itens = pedido.getItens().stream().map(ItemPedidoDto::new)
             .collect(Collectors.toList());
         this.dataInit = pedido.getDataInit();
+        this.dataContagem = pedido.getDataContagem();
         this.dataFim = pedido.getDataFim();
-        total= pedido.getItens().stream().map(ItemPedido::getValorSoma)
+        total = pedido.getItens().stream().map(ItemPedido::getValorSoma)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     }

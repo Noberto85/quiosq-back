@@ -22,7 +22,7 @@ public class TokenServiceImpl implements TokenService {
     private final MercadoApiService service;
     private final MercadoPagoTokenService mercadoPagoTokenService;
     private final QuiosqueService quiosqueService;
-    private final UserService userService;
+
 
     @Override
     @Transactional
@@ -42,10 +42,7 @@ public class TokenServiceImpl implements TokenService {
             userDTO.getPhone().getNumber()));
         var quiosque = quiosqueService.save(quiosqueRequest);
         mercadoPagoTokenService.create(autorizationDetails, quiosque);
-        CreateUserDto createUserDto = new CreateUserDto(userDTO.getEmail(), userDTO.getFirstName(),
-            "123456",
-            RoleName.ROLE_ADMIN, quiosque.getId());
-        userService.createUser(createUserDto);
+
         return new RedirectView("/success.html");
     }
 }

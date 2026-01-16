@@ -47,6 +47,7 @@ CREATE TABLE tb_mesa (
     status VARCHAR(15) NOT NULL,
     garcom_id BIGINT,
     quiosque_id UUID,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
 	  UNIQUE(numero,quiosque_id),
     CONSTRAINT fk_mesa_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id),
     CONSTRAINT fk_mesa_garcom FOREIGN KEY (garcom_id) REFERENCES tb_garcom(id)
@@ -62,13 +63,16 @@ CREATE TABLE tb_pedido (
     quiosque_id UUID,
     data_init TIMESTAMP  NOT NULL,
     data_fim TIMESTAMP,
+    data_contagem TIMESTAMP,
     CONSTRAINT fk_pedido_mesa FOREIGN KEY (mesa_id) REFERENCES tb_mesa(id),
     CONSTRAINT fk_pedido_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id)
 );
 
 CREATE TABLE tb_categoria (
     id BIGSERIAL PRIMARY KEY,
-    descricao VARCHAR(255) NOT NULL
+    descricao VARCHAR(255) NOT NULL,
+    quiosque_id UUID NOT NULL,
+    CONSTRAINT fk_categoria_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id)
 );
 
 CREATE TABLE tb_item_cardapio (
@@ -81,6 +85,7 @@ CREATE TABLE tb_item_cardapio (
     avaliacao INT,
     categoria_id BIGINT NOT NULL,
     quiosque_id UUID,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_cardapio_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id),
     CONSTRAINT fk_cardapio_categoria FOREIGN KEY (categoria_id) REFERENCES tb_categoria(id)
 );

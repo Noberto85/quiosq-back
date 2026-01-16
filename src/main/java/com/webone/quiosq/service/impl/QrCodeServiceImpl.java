@@ -28,7 +28,7 @@ public class QrCodeServiceImpl implements QrCodeService {
     private final String frontUrl;
 
     public QrCodeServiceImpl(MesaService mesaService, JwtTokenService jwtService,
-        @Value("${front-url}") String frontUrl) {
+        @Value("${web-front}") String frontUrl) {
         this.mesaService = mesaService;
         this.jwtService = jwtService;
         this.frontUrl = frontUrl;
