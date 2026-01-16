@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-
 public class UserServiceImp implements UserService {
     private final QuiosqueRepository quiosqueRepository;
     private final UserRepository userRepository;

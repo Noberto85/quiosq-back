@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@AllArgsConstructor
 @Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,6 +29,11 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenService jwtTokenService;
 
     private final UserRepository userRepository;
+
+    public UserAuthenticationFilter(JwtTokenService jwtTokenService, @Lazy UserRepository userRepository) {
+        this.jwtTokenService = jwtTokenService;
+        this.userRepository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
