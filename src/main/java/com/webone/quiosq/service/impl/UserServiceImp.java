@@ -2,7 +2,7 @@ package com.webone.quiosq.service.impl;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webone.quiosq.config.SecurityConfiguration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.webone.quiosq.dto.CreateUserDto;
 import com.webone.quiosq.dto.UpdateUserDto;
 import com.webone.quiosq.dto.UserDto;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImp implements UserService {
     private final QuiosqueRepository quiosqueRepository;
     private final UserRepository userRepository;
-    private final SecurityConfiguration securityConfiguration;
+    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final ObjectMapper modelMapper;
 
@@ -47,7 +47,7 @@ public class UserServiceImp implements UserService {
             .email(createUserDto.email())
             .nome(createUserDto.nome())
             .quiosque(quiosque)
-            .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
+            .password(passwordEncoder.encode(createUserDto.password()))
             .roles(List.of(role.get()))
             .build();
 
