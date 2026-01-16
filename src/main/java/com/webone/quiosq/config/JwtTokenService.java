@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class JwtTokenService {
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
-    public JwtTokenService(MesaRepository mesaRepository,
+    public JwtTokenService(@Lazy MesaRepository mesaRepository,
         @Value("${jwt.secret.key}") String secretKey) {
         this.mesaRepository = mesaRepository;
         this.secretKey = secretKey;
