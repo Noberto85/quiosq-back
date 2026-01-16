@@ -6,7 +6,9 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.entity.enums.RoleName;
-import com.webone.quiosq.service.MesaService;
+import com.webone.quiosq.exception.CodeErro.QuiosqueError;
+import com.webone.quiosq.exception.NotFoundException;
+import com.webone.quiosq.repository.MesaRepository;
 import com.webone.quiosq.service.impl.UserDetailsImpl;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtTokenService {
 
-    private final MesaService mesaService;
+    private final MesaRepository mesaRepository;
     private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
     private static final String ROLES = "Roles";
     private static final String CLIENTE = "CLIENTE";
@@ -37,8 +39,9 @@ public class JwtTokenService {
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
-    public JwtTokenService(MesaService mesaService, @Value("${jwt.secret.key}") String secretKey) {
-        this.mesaService = mesaService;
+    public JwtTokenService(MesaRepository mesaRepository,
+        @Value("${jwt.secret.key}") String secretKey) {
+        this.mesaRepository = mesaRepository;
         this.secretKey = secretKey;
     }
 
@@ -50,7 +53,8 @@ public class JwtTokenService {
                 .withIssuer(ISSUER)
                 .withClaim(USER_NAME, userDt.getUser().getNome())
                 .withClaim(QUIOSQUE_ID,
-                    Optional.ofNullable(userDt.getUser().getQuiosque()).map(f -> f.getId().toString())
+                    Optional.ofNullable(userDt.getUser().getQuiosque())
+                        .map(f -> f.getId().toString())
                         .orElse(null))
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDate())
@@ -67,7 +71,9 @@ public class JwtTokenService {
     }
 
     public String generateTokenClient(ClientDetails user) {
-        Long mesaId = mesaService.findByQuiosqueAndMesa(user.getQuiosqueId(), user.getMesa());
+        Long mesaId = mesaRepository.getID(user.getQuiosqueId(), user.getMesa())
+            .orElseThrow(() -> new NotFoundException(
+                QuiosqueError.MESA_NAO_ENCONTRADO.getCodeErro()));
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
