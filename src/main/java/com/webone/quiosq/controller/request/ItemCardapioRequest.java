@@ -2,28 +2,20 @@ package com.webone.quiosq.controller.request;
 
 
 import java.math.BigDecimal;
-import java.util.UUID;
-import lombok.Data;
 
-@Data
-public class ItemCardapioRequest {
+public record ItemCardapioRequest(
+    Long id,
 
+    String nome,
 
-    private Long id;
+    String descricao,
 
-    private String nome;
+    BigDecimal preco,
 
-    private String descricao;
+    byte[] imagem,
 
-    private BigDecimal preco;
-
-    private String urlImagem;
-
-    private Integer avaliacao;
-
-    private Long categoriaId;
-
-    private UUID quiosqueId;
+    Long categoriaId
+) {
 
 
 }

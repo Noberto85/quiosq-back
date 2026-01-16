@@ -145,4 +145,18 @@ public class CodeErro {
             this.codeErro = codeErro;
         }
     }
+
+    // ------------------- ERROS MESA -------------------
+    @Getter
+    public enum SqlError {
+        DATA_INTEGRITY_VIOLATION_ERROR(
+            new CodeErro(-10001, "Não é possível excluir: há produtos vinculados.", Constants.SEM_DETALHES,
+                HttpStatus.CONFLICT));
+
+        private final CodeErro codeErro;
+
+        SqlError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+    }
 }

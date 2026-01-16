@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
-    @Query("SELECT c FROM Categoria c join c.quiosque q WHERE q.id =: id")
-    List<Categoria> findAllByOrderByDescricaoAsc(@Param("id") UUID quiosqueId);
+    @Query("SELECT c FROM Categoria c WHERE c.quiosque.id = :quiosqueId ORDER BY c.descricao ASC")
+    List<Categoria> findAllByQuiosqueIdOrderByDescricaoAsc(@Param("quiosqueId") UUID quiosqueId);
 
 }

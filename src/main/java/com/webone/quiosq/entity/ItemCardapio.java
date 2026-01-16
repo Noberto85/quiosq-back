@@ -38,7 +38,8 @@ public class ItemCardapio {
     private String descricao;
     @Column(nullable = false)
     private BigDecimal preco;
-    @Lob
+
+    @Column(name = "imagem", columnDefinition = "bytea")
     private byte[] imagem;
 
     private String urlImagem;

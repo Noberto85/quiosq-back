@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,12 @@ public class CategoriaController {
     @GetMapping("/{quiosqueId}")
     public ResponseEntity<List<CategoriaDto>> findAll(@PathVariable("quiosqueId") UUID quiosqueId) {
         return new ResponseEntity<>(service.findAll(quiosqueId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{quiosqueId}")
+    public ResponseEntity<Void> create(@PathVariable("quiosqueId") UUID quiosqueId) {
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

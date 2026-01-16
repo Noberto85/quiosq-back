@@ -19,6 +19,7 @@ public class ItemCardapioResponse {
     private Integer avaliacao;
     private String categoria;
     private CategoriaDto categoriaDto;
+    private Boolean ativo;
 
 
     public ItemCardapioResponse(ItemCardapio itemCardapio) {
@@ -31,5 +32,6 @@ public class ItemCardapioResponse {
         this.avaliacao = itemCardapio.getAvaliacao();
         this.categoria = itemCardapio.getCategoria().getDescricao();
         this.categoriaDto = new CategoriaDto(itemCardapio.getCategoria());
+        this.ativo = itemCardapio.getAtivo();
     }
 }
