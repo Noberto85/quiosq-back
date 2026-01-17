@@ -40,7 +40,7 @@ public class JwtTokenService {
     private final String secretKey;
     private static final String ISSUER = "noberto-api";
 
-    public JwtTokenService(@Lazy MesaRepository mesaRepository,
+    public JwtTokenService(MesaRepository mesaRepository,
         @Value("${jwt.secret.key}") String secretKey) {
         this.mesaRepository = mesaRepository;
         this.secretKey = secretKey;
