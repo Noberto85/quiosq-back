@@ -11,6 +11,7 @@ import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.repository.PagamentoRepository;
 import com.webone.quiosq.service.MercadoPagoTokenService;
 import com.webone.quiosq.service.WebhookService;
+import com.webone.quiosq.ws.PedidoBroadcaster;
 import com.webone.quiosq.ws.PixStatusBroadcaster;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -33,16 +34,19 @@ public class WebhookServiceImpl implements WebhookService {
     private final MercadoPagoTokenService mercadoPagoTokenService;
     private final MercadoApiService mercadoApiService;
     private final PixStatusBroadcaster broadcaster;
+    private final PedidoBroadcaster pedidoBroadcaster;
     private final String whSecret;
 
 
     public WebhookServiceImpl(PagamentoRepository repository,
         MercadoPagoTokenService mercadoPagoTokenService, MercadoApiService mercadoApiService,
-        PixStatusBroadcaster broadcaster, @Value("${webhook.secret}") String whSecret) {
+        PixStatusBroadcaster broadcaster, PedidoBroadcaster pedidoBroadcaster,
+        @Value("${webhook.secret}") String whSecret) {
         this.repository = repository;
         this.mercadoPagoTokenService = mercadoPagoTokenService;
         this.mercadoApiService = mercadoApiService;
         this.broadcaster = broadcaster;
+        this.pedidoBroadcaster = pedidoBroadcaster;
         this.whSecret = whSecret;
 
     }
@@ -69,6 +73,10 @@ public class WebhookServiceImpl implements WebhookService {
                                 LocalDateTime.now());
                             broadcaster.broadcastToPayment(pag.getId().toString(),
                                 "{\"status\":\"approved\"}");
+                            pedidoBroadcaster.broadcast(
+                                pag.getPedido().getQuiosque().getId().toString(),
+                                "{\"status\":\"approved\"}");
+
                             return;
                         case REJECTED:
                             pag = updatePagamento(status, StatusPedidoEnum.CANCELADO);
@@ -105,6 +113,9 @@ public class WebhookServiceImpl implements WebhookService {
         pagamento.setTransactionId("123456");
         pagamento.getPedido().setDataContagem(LocalDateTime.now());
         repository.save(pagamento);
+        pedidoBroadcaster.broadcast(
+            pagamento.getPedido().getQuiosque().getId().toString(),
+            "{\"status\":\"approved\"}");
         broadcaster.broadcastToPayment(payload.toString(),
             "{\"status\":\"approved\"}");
     }

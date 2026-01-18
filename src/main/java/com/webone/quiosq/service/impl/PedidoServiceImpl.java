@@ -11,7 +11,6 @@ import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import com.webone.quiosq.exception.CodeErro.PedidoError;
 import com.webone.quiosq.exception.CodeErro.RoleError;
 import com.webone.quiosq.exception.NotFoundException;
-import com.webone.quiosq.exception.SqlException;
 import com.webone.quiosq.handler.PagamentoHandle;
 import com.webone.quiosq.itg.response.PagamentoApiResponse;
 import com.webone.quiosq.projection.PedidoProjection;
@@ -45,13 +44,14 @@ public class PedidoServiceImpl implements PedidoService {
     private final MercadoPagoTokenService mercadoPagoTokenService;
     private final PagamentoService pagamentoService;
 
+
     @Override
     @Transactional
     public PagamentoResponse createPedido(PedidoRequest request) {
 
         try {
 
-                Optional<PedidoProjection> pedidoOpt = pedidoRepository.createPedido(request.getNome(),
+            Optional<PedidoProjection> pedidoOpt = pedidoRepository.createPedido(request.getNome(),
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
             if (pedidoOpt.isEmpty()) {
@@ -68,7 +68,7 @@ public class PedidoServiceImpl implements PedidoService {
                 PagamentoHandle next = iterator.next();
                 pagamentoResponse = next.handleRequest(request, accessToken);
                 Optional<Pedido> byId = pedidoRepository.findById(pedido.getPedidoId());
-                var pag = pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
+                pagamentoService.create(buildPagamento(pagamentoResponse, byId.get()));
                 return new PagamentoResponse(pagamentoResponse, pedido.getPedidoId());
             }
             return null;
@@ -106,7 +106,7 @@ public class PedidoServiceImpl implements PedidoService {
     public void updateStatus(Long id, StatusPedidoEnum status) {
         final Pedido pedido = findById(id);
         pedido.setStatus(status);
-        if (status.equals(StatusPedidoEnum.ENTREGUE)){
+        if (status.equals(StatusPedidoEnum.ENTREGUE)) {
             pedido.setDataFim(LocalDateTime.now());
         }
         pedidoRepository.save(pedido);
