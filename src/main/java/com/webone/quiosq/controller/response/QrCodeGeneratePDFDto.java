@@ -7,10 +7,10 @@ import lombok.Data;
 public class QrCodeGeneratePDFDto {
 
     private byte[] url;
-    private Integer numero;
+    private String numero;
 
     public QrCodeGeneratePDFDto(QrCodeGenerateResponse response, Mesa mesa) {
         this.url = response.getUrl();
-        this.numero = mesa.getNumero();
+        this.numero = mesa.getNumero().toString();
     }
 }

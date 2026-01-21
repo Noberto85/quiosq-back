@@ -128,6 +128,17 @@
       <artifactId>ecj</artifactId>
       <version>3.38.0</version>
     </dependency>
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports-jdt</artifactId>
+      <version>7.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>ecj</artifactId>
+      <version>3.41.0</version>
+    </dependency>
   </dependencies>
 
   <build>

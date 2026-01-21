@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QrCodeItem {
 
-    private Integer numero;
+    private String numero;
     private InputStream qrcode;
 
     public QrCodeItem(QrCodeGeneratePDFDto dto) {

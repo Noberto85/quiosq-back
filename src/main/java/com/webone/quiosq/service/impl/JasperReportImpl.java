@@ -23,6 +23,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Slf4j
 public class JasperReportImpl implements JasperReportService {
+    static {
+        System.setProperty(
+            "net.sf.jasperreports.compiler.class",
+            "net.sf.jasperreports.compilers.JRJavaCompiler"
+        );
+    }
+
 
     private static final String REPORT_PATH = "/jasper/qrcode/qrcode.jrxml";
 
