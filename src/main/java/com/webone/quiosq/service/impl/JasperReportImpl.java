@@ -3,7 +3,10 @@ package com.webone.quiosq.service.impl;
 import com.webone.quiosq.controller.response.QrCodeGeneratePDFDto;
 import com.webone.quiosq.service.JasperReportService;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,22 @@ public class JasperReportImpl implements JasperReportService {
      * Obtém o InputStream do arquivo JRXML dentro do classpath.
      */
     private InputStream getReportStream() {
-        InputStream stream = getClass().getResourceAsStream(REPORT_PATH);
+        InputStream stream = Thread.currentThread()
+            .getContextClassLoader()
+            .getResourceAsStream(REPORT_PATH);
+
+        Enumeration<URL> resources = null;
+        try {
+            resources = Thread.currentThread()
+                .getContextClassLoader()
+                .getResources("jasper/qrcode");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        while (resources.hasMoreElements()) {
+            System.out.println("DIR: " + resources.nextElement());
+        }
         if (stream == null) {
             throw new IllegalStateException("Relatório não encontrado em: " + REPORT_PATH);
         }
