@@ -30,7 +30,7 @@
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			</element>
 			<element kind="rectangle" uuid="9b9d852b-e737-456e-a48a-cce51d9b2f23" x="19" y="281" width="220" height="42" forecolor="#128E96" backcolor="rgba(240, 240, 240, 0.88235295)" radius="5"/>
-			<element kind="textField" uuid="7cacbc5f-293c-4d9b-b30e-9a93b35777c4" x="19" y="287" width="220" height="30" forecolor="#030303" fontName="Arial Black" fontSize="18.0" hTextAlign="Center" vTextAlign="Middle">
+			<element kind="textField" uuid="7cacbc5f-293c-4d9b-b30e-9a93b35777c4" x="19" y="287" width="220" height="30" forecolor="#030303" fontName="SansSerif" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 				<expression><![CDATA["Mesa: "+ $F{numero}
 ]]></expression>
 			</element>
