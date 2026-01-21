@@ -1,7 +1,11 @@
 package com.webone.quiosq.service.impl;
 
+import com.google.zxing.WriterException;
+import com.webone.quiosq.controller.request.MesaQrcodeDownload;
 import com.webone.quiosq.controller.request.MesaRequest;
+import com.webone.quiosq.controller.response.MesaQrcodeResponse;
 import com.webone.quiosq.controller.response.MesaResponse;
+import com.webone.quiosq.controller.response.QrCodeGeneratePDFDto;
 import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Garcom;
@@ -19,7 +23,10 @@ import com.webone.quiosq.projection.MesaInfoProjection;
 import com.webone.quiosq.repository.GarcomRepository;
 import com.webone.quiosq.repository.MesaRepository;
 import com.webone.quiosq.repository.QuiosqueRepository;
+import com.webone.quiosq.service.JasperReportService;
 import com.webone.quiosq.service.MesaService;
+import com.webone.quiosq.service.QrCodeService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +44,8 @@ public class MesaServiceImpl implements MesaService {
     private final GarcomRepository repository;
     private final MesaRepository mesaRepository;
     private final QuiosqueRepository quiosqueRepository;
+    private final QrCodeService qrCodeService;
+    private final JasperReportService jasperReportService;
 
     @Override
     public void salvar(List<Mesa> mesalist) {
@@ -128,5 +137,17 @@ public class MesaServiceImpl implements MesaService {
         mesa.setStatus(StatusMesaEnum.LIVRE);
         mesa.setAtivo(Boolean.FALSE);
         mesaRepository.save(mesa);
+    }
+
+    @Override
+    public MesaQrcodeResponse download(MesaQrcodeDownload request) {
+        try {
+            final List<QrCodeGeneratePDFDto> qrcode = qrCodeService.generateAndUploadQrCode(
+                request.ids());
+            return new MesaQrcodeResponse(jasperReportService.buildPfd(qrcode));
+
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

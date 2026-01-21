@@ -1,0 +1,36 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="qrcode2" language="java" columnCount="2" pageWidth="595" pageHeight="842" orientation="Landscape" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4b6a98b1-9196-4f9c-b1bd-ce42157b8ef5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="numero" class="java.lang.Integer"/>
+	<field name="qrcode" class="java.io.InputStream"/>
+	<title height="98" splitType="Stretch">
+		<element kind="rectangle" uuid="7c4cad89-cd89-4a88-a68e-f6eb80492164" x="-20" y="0" width="595" height="70" forecolor="#FFFFFF" backcolor="#18968E"/>
+		<element kind="staticText" uuid="32e3c663-650f-4f43-aaf0-1277a84958ca" x="385" y="0" width="190" height="70" forecolor="#FFFFFF" fontSize="45.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[QrCode Mesas]]></text>
+		</element>
+	</title>
+	<detail>
+		<band height="340" splitType="Stretch">
+			<element kind="image" uuid="33c0b51a-d43d-44da-8a18-c2cd7c28c0a5" x="0" y="0" width="280" height="285">
+				<expression><![CDATA[$F{qrcode}]]></expression>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="rectangle" uuid="9b9d852b-e737-456e-a48a-cce51d9b2f23" x="30" y="244" width="220" height="42" forecolor="#128E96" backcolor="rgba(240, 240, 240, 0.88235295)" radius="5"/>
+			<element kind="textField" uuid="7cacbc5f-293c-4d9b-b30e-9a93b35777c4" x="30" y="250" width="220" height="30" forecolor="#030303" fontName="Arial Black" fontSize="18.0" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA["Mesa: "+ ($F{numero} <=9? "0" + $F{numero} : $F{numero})
+]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

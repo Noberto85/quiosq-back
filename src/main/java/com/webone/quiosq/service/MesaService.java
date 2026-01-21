@@ -1,11 +1,14 @@
 package com.webone.quiosq.service;
 
+import com.webone.quiosq.controller.request.MesaQrcodeDownload;
 import com.webone.quiosq.controller.request.MesaRequest;
+import com.webone.quiosq.controller.response.MesaQrcodeResponse;
 import com.webone.quiosq.controller.response.MesaResponse;
 import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Garcom;
 import com.webone.quiosq.entity.Mesa;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,4 +33,6 @@ public interface MesaService {
     void update(MesaRequest request);
 
     void disable(Long id);
+
+    MesaQrcodeResponse download(MesaQrcodeDownload request);
 }

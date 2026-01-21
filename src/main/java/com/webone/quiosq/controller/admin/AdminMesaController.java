@@ -1,10 +1,14 @@
 package com.webone.quiosq.controller.admin;
 
+import com.webone.quiosq.controller.request.MesaQrcodeDownload;
 import com.webone.quiosq.controller.request.MesaRequest;
+import com.webone.quiosq.controller.response.MesaQrcodeResponse;
 import com.webone.quiosq.controller.response.MesaResponse;
 import com.webone.quiosq.core.queryfilter.MesaQueryFilter;
 import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.service.MesaService;
+import jakarta.validation.Valid;
+import java.util.Base64;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -62,6 +66,12 @@ public class AdminMesaController {
     public ResponseEntity<Void> update(@RequestBody MesaRequest request) {
         service.update(request);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/download-pdf")
+    public ResponseEntity<MesaQrcodeResponse> downloadPdf(@Valid @RequestBody MesaQrcodeDownload request){
+        return new ResponseEntity<>(service.download(request),
+            HttpStatus.OK);
     }
 
 }
