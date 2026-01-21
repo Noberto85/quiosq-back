@@ -38,7 +38,7 @@ public class AuthController {
 
         // String token = JWTUtil.generateToken(usuaioAutenticado.getEmail());
         // response.setHeader("Authorization", "Bearer " + usuaioAutenticado.getEmail());
-        jasperReport.gerar2();
+
         return ResponseEntity.noContent().build();
     }
 
