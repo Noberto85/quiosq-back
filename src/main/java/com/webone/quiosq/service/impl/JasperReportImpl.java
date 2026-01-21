@@ -3,10 +3,7 @@ package com.webone.quiosq.service.impl;
 import com.webone.quiosq.controller.response.QrCodeGeneratePDFDto;
 import com.webone.quiosq.service.JasperReportService;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,31 +26,19 @@ public class JasperReportImpl implements JasperReportService {
 
     private static final String REPORT_PATH = "/jasper/qrcode/qrcode.jrxml";
 
+
     /**
      * Obtém o InputStream do arquivo JRXML dentro do classpath.
      */
     private InputStream getReportStream() {
-        InputStream stream = Thread.currentThread()
-            .getContextClassLoader()
-            .getResourceAsStream(REPORT_PATH);
 
-        Enumeration<URL> resources = null;
-        try {
-            resources = Thread.currentThread()
-                .getContextClassLoader()
-                .getResources("jasper/qrcode");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        while (resources.hasMoreElements()) {
-            System.out.println("DIR: " + resources.nextElement());
-        }
+        InputStream stream = this.getClass().getResourceAsStream(REPORT_PATH);
         if (stream == null) {
             throw new IllegalStateException("Relatório não encontrado em: " + REPORT_PATH);
         }
         return stream;
     }
+
 
     /**
      * Cria diretório se não existir.
@@ -68,6 +53,7 @@ public class JasperReportImpl implements JasperReportService {
     @Override
     @SneakyThrows
     public byte[] buildPfd(List<QrCodeGeneratePDFDto> listDtos) {
+
         List<QrCodeItem> qrCodeItems = listDtos.stream()
             .map(QrCodeItem::new)
             .toList();
