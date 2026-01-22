@@ -18,6 +18,7 @@ public class PedidoResponse {
     private Long id;
     private String status;
     private String nomePedido;
+    private String garcom;
     private String codigo;
     private String mesa;
     private List<ItemPedidoDto> itens;
@@ -31,6 +32,7 @@ public class PedidoResponse {
     public PedidoResponse(Pedido pedido) {
         this.id = pedido.getId();
         this.nomePedido = pedido.getNomePedido();
+        this.garcom = pedido.getGarcom().getNome();
         this.status = pedido.getStatus().getDescricao();
         this.codigo = pedido.getCodigo();
         this.mesa = (pedido.getMesa().getNumero() <= 9) ? "0" + pedido.getMesa().getNumero()
