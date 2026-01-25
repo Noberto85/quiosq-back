@@ -88,7 +88,7 @@ public class MesaServiceImpl implements MesaService {
     public void create(MesaRequest request, UUID quiosqueID) {
         final Optional<Mesa> mesaOpt = mesaRepository.findByNumeroAndQuiosque(
             quiosqueID, request.getNumero());
-        if (mesaOpt.isPresent()) {
+        if (mesaOpt.isPresent() && mesaOpt.get().getAtivo()) {
             throw new MesaException(MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro(),
                 request.getNumero());
         }
@@ -102,13 +102,21 @@ public class MesaServiceImpl implements MesaService {
         }
         var quiosque = quiosqueOpt.get();
         var garcom = garcomOpt.get();
-        var mesa = Mesa.builder()
-            .garcom(garcom)
-            .numero(request.getNumero())
-            .status(StatusMesaEnum.LIVRE)
-            .quiosque(quiosque)
-            .build();
-        mesaRepository.save(mesa);
+
+        if (mesaOpt.isPresent()) {
+            var mesa = mesaOpt.get();
+            mesa.setAtivo(Boolean.TRUE);
+            mesa.setGarcom(garcom);
+            mesaRepository.save(mesa);
+        } else {
+            var mesa = Mesa.builder()
+                .garcom(garcom)
+                .numero(request.getNumero())
+                .status(StatusMesaEnum.LIVRE)
+                .quiosque(quiosque)
+                .build();
+            mesaRepository.save(mesa);
+        }
 
     }
 
