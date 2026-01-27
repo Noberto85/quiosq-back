@@ -1,7 +1,5 @@
 package com.webone.quiosq.service.impl;
 
-import com.webone.quiosq.exception.CodeErro.GeralError;
-import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.SystemRoleRepository;
 import com.webone.quiosq.service.SystemRoleService;
 import java.math.BigDecimal;
@@ -17,6 +15,6 @@ public class SystemRoleServiceImpl implements SystemRoleService {
     @Override
     public BigDecimal getTaxa() {
         return repository.getTaxa()
-            .orElseThrow(() -> new NotFoundException(GeralError.NAO_ENCONTRADO.getCodeErro()));
+            .orElse(new BigDecimal("0"));
     }
 }

@@ -45,6 +45,10 @@ public class SecurityConfiguration {
         "/api/v1/cardapio/**", "/api/v1/categoria", "/api/v1/pagamento/**", "/api/v1/pedido/**"
     };
 
+    private static final String[] ENDPOINTS_SYSTEM_ADMIN = {
+    "/api/v1/system/quiosque/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -56,6 +60,7 @@ public class SecurityConfiguration {
                 .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
                 .requestMatchers(ENDPOINTS_CLIENTE_ADMIN).hasAnyRole(ADMIN, CLIENTE)
                 .requestMatchers(ENDPOINTS_WITH_ADMIN).hasAnyRole(ADMIN)
+                .requestMatchers(ENDPOINTS_SYSTEM_ADMIN).hasAnyRole(SYSTEM_ADMIN)
                 .anyRequest().authenticated()
             )
             .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
