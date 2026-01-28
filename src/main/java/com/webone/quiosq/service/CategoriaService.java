@@ -12,7 +12,7 @@ public interface CategoriaService {
     @Query("SELECT c FROM Categoria c where c.quiosque =:quiosqueId ORDER BY c.descricao ASC")
     List<CategoriaDto> findAll(@Param("quiosqueId") UUID quiosqueId);
 
-    void create(CategoriaRequest request, UUID quiosqueId);
+    void createClient(CategoriaRequest request, UUID quiosqueId);
 
     void update(CategoriaRequest request);
 

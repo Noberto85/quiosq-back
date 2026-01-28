@@ -5,7 +5,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE tb_quiosque (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(20) UNIQUE NOT NULL
+    cnpj VARCHAR(20) UNIQUE NOT NULL,
+    ativo BOOLEAN NOT NULL
 );
 
 -- Tabela de roles

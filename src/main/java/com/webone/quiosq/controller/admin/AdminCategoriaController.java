@@ -40,7 +40,7 @@ public class AdminCategoriaController {
         @PathVariable("quiosqueId") UUID quiosqueId,
         @Valid @RequestBody CategoriaRequest request
     ) {
-        service.create(request, quiosqueId);
+        service.createClient(request, quiosqueId);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }

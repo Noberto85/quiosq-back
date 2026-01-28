@@ -39,7 +39,12 @@ public class Cliente implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false)
     private String telefone;
+
+    private String password;
 
     private LocalDateTime dataAcesso;
 

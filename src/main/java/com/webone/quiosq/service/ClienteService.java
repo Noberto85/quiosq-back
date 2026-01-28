@@ -1,5 +1,6 @@
 package com.webone.quiosq.service;
 
+import com.webone.quiosq.controller.request.ClienteCreateRequest;
 import com.webone.quiosq.controller.request.ClienteRequest;
 import com.webone.quiosq.controller.response.ClienteResponse;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
@@ -8,9 +9,7 @@ import java.util.UUID;
 
 public interface ClienteService {
 
-    RecoveryJwtTokenDto save(ClienteRequest request);
+    void createCliente(ClienteCreateRequest request);
 
-    ClienteResponse findByTelefoneAndQuiosqueId(String telefone, UUID quiosqueId);
 
-    Cliente findByTelefoneAndQuiosqueIdOpt(String telefone, UUID quiosqueId);
 }

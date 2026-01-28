@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
     private final RoleRepository roleRepository;
     private final ObjectMapper modelMapper;
 
-    // Método responsável por criar um usuário
+
     @Override
     public void createUser(final CreateUserDto createUserDto) {
         final Optional<Role> role = roleRepository.findByNome(createUserDto.role());

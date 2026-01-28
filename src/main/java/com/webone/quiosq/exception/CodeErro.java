@@ -159,4 +159,17 @@ public class CodeErro {
             this.codeErro = codeErro;
         }
     }
+
+    @Getter
+    public enum ClienteError {
+        CLIENTE_JA_CADASTRADO(
+            new CodeErro(-11001, "Cliente já cadastrado.", Constants.SEM_DETALHES,
+                HttpStatus.CONFLICT));
+
+        private final CodeErro codeErro;
+
+        ClienteError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+    }
 }

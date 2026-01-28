@@ -1,6 +1,8 @@
 package com.webone.quiosq.controller;
 
+import com.webone.quiosq.controller.request.ValidateToken;
 import com.webone.quiosq.controller.response.IdentifcacaoResponse;
+import com.webone.quiosq.dto.LoginClienteDto;
 import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
 import com.webone.quiosq.service.AuthService;
@@ -11,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +30,25 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(
-        @RequestBody LoginUserDto loginUserDto) throws InterruptedException {
+        @RequestBody LoginUserDto loginUserDto) {
         return new ResponseEntity<>(authService.authenticateUser(loginUserDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/cliente")
+    public ResponseEntity<RecoveryJwtTokenDto> authenticateCliente(
+        @RequestBody LoginClienteDto request) {
+        return new ResponseEntity<>(authService.authenticateClient(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/sms/{id}")
+    public ResponseEntity<Void> sendSmsToken(@PathVariable("id") String id) {
+        authService.generateCodigoUsuario(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/sms/validate")
+    public ResponseEntity<Boolean> sendSmsValidate(@RequestBody ValidateToken request) {
+        return new ResponseEntity<>(authService.validarToken(request), HttpStatus.OK);
     }
 
 
@@ -43,9 +63,9 @@ public class AuthController {
     }
 
     @GetMapping()
-    public ResponseEntity<IdentifcacaoResponse> getToken(
+    public ResponseEntity<IdentifcacaoResponse> buildAppIdentificacao(
         @RequestParam(name = "token") String token) {
-        return new ResponseEntity<>(authService.buildIdentificacao(token),
+        return new ResponseEntity<>(authService.buildAppIdentificacao(token),
             HttpStatus.OK);
     }
 

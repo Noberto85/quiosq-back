@@ -1,5 +1,6 @@
 package com.webone.quiosq.controller;
 
+import com.webone.quiosq.controller.request.ClienteCreateRequest;
 import com.webone.quiosq.controller.request.ClienteRequest;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
 import com.webone.quiosq.service.ClienteService;
@@ -25,10 +26,11 @@ public class ClienteController {
         @ApiResponse(description = "Erro de validação", responseCode = "400"),
         @ApiResponse(description = "Erro interno do servidor", responseCode = "500")
     })
-    @PostMapping
-    public ResponseEntity<RecoveryJwtTokenDto> createClientAndToken(
-        @RequestBody ClienteRequest createUserDto) {
-        return new ResponseEntity<>(service.save(createUserDto), HttpStatus.OK);
+    @PostMapping("/create")
+    public ResponseEntity<Void> create(
+        @RequestBody ClienteCreateRequest request) {
+        service.createCliente(request);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

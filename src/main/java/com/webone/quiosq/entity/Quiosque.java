@@ -37,6 +37,9 @@ public class Quiosque {
     @Column(unique = true, nullable = false)
     private String cnpj;
 
+    @Column(nullable = false)
+    private Boolean ativo;
+
     @ManyToMany(mappedBy = "quiosques")
     private Set<Cliente> clientes;
 

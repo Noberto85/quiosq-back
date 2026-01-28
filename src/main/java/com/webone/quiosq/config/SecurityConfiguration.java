@@ -1,5 +1,6 @@
 package com.webone.quiosq.config;
 
+
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class SecurityConfiguration {
     private final UserAuthenticationFilter userAuthenticationFilter;
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-        "/success.html", "/api/webhook/**", "/api/v1/cliente",
+        "/success.html", "/api/webhook/**", "/api/v1/cliente/**",
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
         "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/auth/**",
         "/ws/**"
@@ -46,7 +47,7 @@ public class SecurityConfiguration {
     };
 
     private static final String[] ENDPOINTS_SYSTEM_ADMIN = {
-    "/api/v1/system/quiosque/**"
+        "/api/v1/system/quiosque/**"
     };
 
     @Bean

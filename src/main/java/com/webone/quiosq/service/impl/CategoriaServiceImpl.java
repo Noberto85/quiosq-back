@@ -36,7 +36,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public void create(CategoriaRequest request, UUID quiosqueId) {
+    public void createClient(CategoriaRequest request, UUID quiosqueId) {
         final var quiosque = quiosqueRepository.findById(quiosqueId)
             .orElseThrow(() -> new QuiosqueException(
                 QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));

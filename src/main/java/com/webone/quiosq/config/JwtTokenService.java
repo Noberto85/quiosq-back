@@ -9,7 +9,9 @@ import com.webone.quiosq.entity.enums.RoleName;
 import com.webone.quiosq.exception.CodeErro.QuiosqueError;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.repository.MesaRepository;
+import com.webone.quiosq.service.impl.ClienteDetailsImpl;
 import com.webone.quiosq.service.impl.UserDetailsImpl;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -71,8 +73,9 @@ public class JwtTokenService {
         }
     }
 
-    public String generateTokenClient(ClientDetails user) {
-        Long mesaId = mesaRepository.getID(user.getQuiosqueId(), user.getMesa())
+    public String generateTokenClient(ClienteDetailsImpl cli, UUID quiosqueId, Integer numeroMesa,
+        BigDecimal taxa) {
+        Long mesaId = mesaRepository.getID(quiosqueId, numeroMesa)
             .orElseThrow(() -> new NotFoundException(
                 QuiosqueError.MESA_NAO_ENCONTRADO.getCodeErro()));
         try {
@@ -81,11 +84,11 @@ public class JwtTokenService {
                 .withIssuer(ISSUER)
                 .withIssuedAt(creationDate())
                 .withExpiresAt(expirationDateClient())
-                .withSubject(user.getTelefone())
-                .withClaim(NUMERO_MESA, user.getMesa())
-                .withClaim(TAXA, user.getTaxa().toString())
+                .withSubject(cli.getCliente().getTelefone())
+                .withClaim(NUMERO_MESA, numeroMesa)
+                .withClaim(TAXA, taxa.toString())
                 .withClaim(MESA_ID, mesaId)
-                .withClaim(QUIOSQUE_ID, user.getQuiosqueId().toString())
+                .withClaim(QUIOSQUE_ID, quiosqueId.toString())
                 .withClaim(ROLES, Collections.singletonList(RoleName.ROLE_CLIENTE.name()))
                 .sign(algorithm);
 
