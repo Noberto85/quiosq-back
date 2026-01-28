@@ -9,6 +9,7 @@ import com.webone.quiosq.service.AuthService;
 import com.webone.quiosq.service.impl.JasperReportImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,10 @@ public class AuthController {
     }
 
     @PostMapping("/sms/validate")
-    public ResponseEntity<Boolean> sendSmsValidate(@RequestBody ValidateToken request) {
-        return new ResponseEntity<>(authService.validarToken(request), HttpStatus.OK);
+    public ResponseEntity<Map<String, Boolean>> sendSmsValidate(
+        @RequestBody ValidateToken request) {
+        return new ResponseEntity<>(Map.of("ativo", authService.validarToken(request)),
+            HttpStatus.OK);
     }
 
 

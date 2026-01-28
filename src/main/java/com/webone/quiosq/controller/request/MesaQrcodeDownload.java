@@ -5,7 +5,6 @@ import java.util.List;
 
 public record MesaQrcodeDownload(
     @NotNull List<Long> ids
-
 ) {
 
 }

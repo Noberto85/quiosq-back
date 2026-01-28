@@ -42,9 +42,6 @@ public class Pedido {
     @Column(nullable = false)
     private String codigo;
 
-    @Column(nullable = false)
-    private String nomePedido;
-
     @ManyToOne
     @JoinColumn(name = "mesa_id")
     private Mesa mesa;

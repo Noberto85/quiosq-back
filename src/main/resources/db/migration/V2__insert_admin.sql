@@ -6,13 +6,6 @@ INSERT INTO tb_users_roles (role_id, user_id)
 SELECT 1, id
 FROM tb_users
 WHERE email = 'sys@admin';
-INSERT INTO tb_users_roles (role_id, user_id)
-SELECT 2, id
-FROM tb_users
-WHERE email = 'sys@admin';
-INSERT INTO tb_users_roles (role_id, user_id)
-SELECT 3, id
-FROM tb_users
-WHERE email = 'sys@admin';
+
 
 

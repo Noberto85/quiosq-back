@@ -69,8 +69,8 @@ public class CodeErro {
     // ------------------- ERROS AUTENTICAÇÃO -------------------
     @Getter
     public enum AuthError {
-        AUTH_ERROR(new CodeErro(-4001, "Autenticação não realizada", Constants.SEM_DETALHES,
-            HttpStatus.UNAUTHORIZED));
+        AUTH_ERROR(new CodeErro(-4001, "Usuário ou senha inválidos!", Constants.SEM_DETALHES,
+            HttpStatus.FORBIDDEN));
 
         private final CodeErro codeErro;
 

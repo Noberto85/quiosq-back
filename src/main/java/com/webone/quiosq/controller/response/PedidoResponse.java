@@ -31,7 +31,7 @@ public class PedidoResponse {
 
     public PedidoResponse(Pedido pedido) {
         this.id = pedido.getId();
-        this.nomePedido = pedido.getNomePedido();
+        this.nomePedido = pedido.getCliente().getNome();
         this.garcom = pedido.getGarcom().getNome();
         this.status = pedido.getStatus().getDescricao();
         this.codigo = pedido.getCodigo();

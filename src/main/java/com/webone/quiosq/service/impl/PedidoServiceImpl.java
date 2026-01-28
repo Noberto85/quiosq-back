@@ -51,7 +51,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         try {
 
-            Optional<PedidoProjection> pedidoOpt = pedidoRepository.createPedido(request.getNome(),
+            Optional<PedidoProjection> pedidoOpt = pedidoRepository.createPedido(
                 request.getQuiosqueId(), request.getMesa(),
                 request.getClienteId(), buildItensList(request.getItems()));
             if (pedidoOpt.isEmpty()) {

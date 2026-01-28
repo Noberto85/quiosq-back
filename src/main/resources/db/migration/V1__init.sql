@@ -57,7 +57,6 @@ CREATE TABLE tb_mesa (
 -- Tabela Pedido
 CREATE TABLE tb_pedido (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    nome_pedido VARCHAR(255) NOT NULL,
     status VARCHAR(30) NOT NULL,
     codigo VARCHAR(5) NOT NULL,
     mesa_id BIGINT,

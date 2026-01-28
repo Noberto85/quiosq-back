@@ -24,11 +24,10 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long>,
     JpaSpecificationExecutor<Pedido> {
 
     @Query(
-        value = "SELECT * FROM func_create_pedido(:nomePedido,:quiosqueId, CAST(:mesaId AS BIGINT), :telefone, CAST(:itens AS item_pedido_type[]))",
+        value = "SELECT * FROM func_create_pedido(:quiosqueId, CAST(:mesaId AS BIGINT), :telefone, CAST(:itens AS item_pedido_type[]))",
         nativeQuery = true
     )
     Optional<PedidoProjection> createPedido(
-        @Param("nomePedido") String nomePedido,
         @Param("quiosqueId") UUID quiosqueId,
         @Param("mesaId") Integer mesaId,
         @Param("telefone") String telefone,

@@ -45,9 +45,10 @@ public class QuiosqueServiceImpl implements QuiosqueService {
         if (opt.isPresent()) {
             throw new QuiosqueException(QuiosqueError.DOCUMENTO_EXITE.getCodeErro());
         }
-        Quiosque quiosque = repository.save(
-            mapper.convertValue(request, Quiosque.class)
-        );
+
+        final Quiosque quiosque = mapper.convertValue(request, Quiosque.class);
+        quiosque.setAtivo(Boolean.TRUE);
+        repository.save(quiosque  );
         CreateUserDto createUserDto = new CreateUserDto(quiosque.getEmail(), quiosque.getNome(),
             "123456",
             RoleName.ROLE_ADMIN, quiosque.getId());

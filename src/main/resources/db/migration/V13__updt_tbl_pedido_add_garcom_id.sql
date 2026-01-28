@@ -9,7 +9,6 @@ ADD CONSTRAINT fk_pedido_garcom
 DROP FUNCTION func_create_pedido;
 
 CREATE OR REPLACE FUNCTION func_create_pedido(
-    nome_pedido_in VARCHAR,
     quiosque_in UUID,
     mesa_in BIGINT,
     telefone_in VARCHAR,
@@ -59,8 +58,8 @@ BEGIN
           END IF;
 
     -- Cria pedido
-    INSERT INTO tb_pedido (nome_pedido, status, mesa_id, quiosque_id, garcom_id, data_init, cliente_id)
-    VALUES (nome_pedido_in,'AGUARDANDO_PAGAMENTO', mesaId, quiosqueId, garcomId, NOW(), varclienteId)
+    INSERT INTO tb_pedido (status, mesa_id, quiosque_id, garcom_id, data_init, cliente_id)
+    VALUES ('AGUARDANDO_PAGAMENTO', mesaId, quiosqueId, garcomId, NOW(), varclienteId)
     RETURNING id, codigo INTO pedido_id, codigo_pedido;
 
     -- Insere itens
