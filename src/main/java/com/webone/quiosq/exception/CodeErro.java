@@ -164,7 +164,10 @@ public class CodeErro {
     public enum ClienteError {
         CLIENTE_JA_CADASTRADO(
             new CodeErro(-11001, "Cliente já cadastrado.", Constants.SEM_DETALHES,
-                HttpStatus.CONFLICT));
+                HttpStatus.CONFLICT)),
+        MULTIPLAS_TENTATIVAS_TOKEN(
+        new CodeErro(-11002, "Limite de tentativas atingido. Tente novamente mais tarde.", Constants.SEM_DETALHES,
+            HttpStatus.CONFLICT));
 
         private final CodeErro codeErro;
 

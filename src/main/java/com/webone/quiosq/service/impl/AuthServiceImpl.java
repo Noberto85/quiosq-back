@@ -108,17 +108,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void generateCodigoUsuario(String telefone) {
-        final Optional<Cliente> clienteOpt = repository.findByTelefone(
-            telefone);
+        final Optional<Cliente> clienteOpt = repository.findByTelefone(telefone);
         if (clienteOpt.isPresent()) {
             throw new ClienteException(ClienteError.CLIENTE_JA_CADASTRADO.getCodeErro());
         }
+
+        // Gera token e envia
         final String token = Utils.gerarCodigoSms();
         log.info("TOKEN: {}", token);
         smsService.sendToken(token);
-        redisTemplate.opsForValue().set(SMS + telefone, token, Duration.ofMinutes(5));
 
+        // Salva token com expiração de 5 minutos
+        redisTemplate.opsForValue().set(SMS + telefone, token, Duration.ofMinutes(5));
     }
+
 
     @Override
     public Boolean validarToken(ValidateToken request) {
@@ -127,6 +130,18 @@ public class AuthServiceImpl implements AuthService {
             redisTemplate.opsForValue().getAndDelete(SMS + request.telefone());
             return true;
         }
+
+        String attemptsKey = "SMS_ATTEMPTS:" + request.telefone();
+
+        String attemptsStr = redisTemplate.opsForValue().get(attemptsKey);
+        int attempts = attemptsStr != null ? Integer.parseInt(attemptsStr) : 0;
+
+        if (attempts >= 3) {
+            throw new ClienteException(ClienteError.MULTIPLAS_TENTATIVAS_TOKEN.getCodeErro());
+        }
+        redisTemplate.opsForValue().increment(attemptsKey);
+        redisTemplate.expire(attemptsKey, Duration.ofMinutes(15));
+
         return false;
     }
 
