@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
@@ -39,12 +40,16 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
+    private String cpf;
+
     private String nome;
 
     private byte[] image;
 
     private String password;
 
+    private Boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_users_roles",
@@ -56,5 +61,9 @@ public class User implements Serializable {
     @JoinColumn(name = "quiosque_id")
     private Quiosque quiosque;
 
+    @PrePersist
+    public void prePersist() {
+        this.active = Boolean.TRUE;
+    }
 
 }

@@ -29,6 +29,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new UserDetailsImpl(user.get());
         }
 
+        var func = userRepository.findByCpf(username);
+        if (func.isPresent()) {
+            return new UserDetailsImpl(func.get());
+        }
+
         throw new UsernameNotFoundException("Usuário/Cliente não encontrado");
     }
 

@@ -1,6 +1,7 @@
 package com.webone.quiosq.service.impl;
 
 import com.webone.quiosq.entity.User;
+import com.webone.quiosq.entity.enums.RoleName;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,13 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        if (user.getRoles().stream().allMatch(
+            rl -> rl.getNome().equals(RoleName.ROLE_ADMIN) || rl.getNome()
+                .equals(RoleName.ROLE_SYSTEM_ADMIN))) {
+            return user.getEmail();
+        } else {
+            return user.getCpf();
+        }
     }
 
     @Override

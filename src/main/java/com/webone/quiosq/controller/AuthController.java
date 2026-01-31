@@ -32,13 +32,13 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(
         @RequestBody LoginUserDto loginUserDto) {
-        return new ResponseEntity<>(authService.authenticateUser(loginUserDto), HttpStatus.OK);
+        return new ResponseEntity<>(authService.authenticate(loginUserDto), HttpStatus.OK);
     }
 
     @PostMapping("/cliente")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateCliente(
         @RequestBody LoginClienteDto request) {
-        return new ResponseEntity<>(authService.authenticateClient(request), HttpStatus.OK);
+        return new ResponseEntity<>(authService.authenticate(request), HttpStatus.OK);
     }
 
     @PostMapping("/sms/{id}")

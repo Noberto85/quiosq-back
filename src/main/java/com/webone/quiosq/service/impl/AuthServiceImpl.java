@@ -5,6 +5,7 @@ import com.webone.quiosq.controller.request.ValidateToken;
 import com.webone.quiosq.controller.response.IdentifcacaoResponse;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.dto.LoginClienteDto;
+import com.webone.quiosq.dto.LoginFuncionarioDto;
 import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
@@ -51,16 +52,10 @@ public class AuthServiceImpl implements AuthService {
     private final ClienteRepository repository;
 
     @Override
-    public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
+    public RecoveryJwtTokenDto authenticate(LoginUserDto loginUserDto) {
         try {
             // Cria um objeto de autenticação com o email e a senha do usuário
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUserDto.email(),
-                    loginUserDto.password());
-
-            // Autentica o usuário com as credenciais fornecidas
-            Authentication authentication = authenticationManager.authenticate(
-                usernamePasswordAuthenticationToken);
+            Authentication authentication = getAuthentication(loginUserDto.email(),loginUserDto.password());
 
             // Obtém o objeto UserDetails do usuário autenticado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -72,16 +67,20 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    private Authentication getAuthentication(String username, String password) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+            new UsernamePasswordAuthenticationToken(username,
+                password);
+        return authenticationManager.authenticate(
+            usernamePasswordAuthenticationToken);
+
+    }
+
     @Override
-    public RecoveryJwtTokenDto authenticateClient(LoginClienteDto request) {
+    public RecoveryJwtTokenDto authenticate(LoginClienteDto request) {
         try {
 
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(request.telefone(), request.password());
-
-            // Autentica o usuário com as credenciais fornecidas
-            Authentication authentication = authenticationManager.authenticate(
-                usernamePasswordAuthenticationToken);
+            Authentication authentication = getAuthentication(request.telefone(),request.password());
 
             ClienteDetailsImpl userDetails = (ClienteDetailsImpl) authentication.getPrincipal();
             return new RecoveryJwtTokenDto(
@@ -91,6 +90,22 @@ public class AuthServiceImpl implements AuthService {
             throw new LoginException(e.getMessage(), AuthError.AUTH_ERROR.getCodeErro());
         }
 
+    }
+
+    @Override
+    public RecoveryJwtTokenDto authenticate(LoginFuncionarioDto loginUserDto) {
+        try {
+            // Cria um objeto de autenticação com o email e a senha do usuário
+            Authentication authentication = getAuthentication(loginUserDto.login(),loginUserDto.password());
+
+            // Obtém o objeto UserDetails do usuário autenticado
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            // Gera um token JWT para o usuário autenticado
+            return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
+        } catch (AuthenticationException e) {
+            throw new LoginException(e.getMessage(), AuthError.AUTH_ERROR.getCodeErro());
+        }
     }
 
     @Override

@@ -37,9 +37,9 @@ public class SecurityConfiguration {
 
 
     private static final String[] ENDPOINTS_WITH_ADMIN = {
-        "/api/v1/admin/garcom/**", "/api/v1/admin/pedido/**", "/api/v1/admin/mesa/**"
+        "/api/v1/admin/funcionario/**", "/api/v1/admin/pedido/**", "/api/v1/admin/mesa/**"
         , "/api/v1/cardapio/**", "/api/v1/admin/item_cardapio/**", "/api/v1/admin/categoria/**",
-        "/api/v1/admin/dashboard/**"
+        "/api/v1/admin/dashboard/**","/api/v1/role"
     };
 
     private static final String[] ENDPOINTS_CLIENTE_ADMIN = {
