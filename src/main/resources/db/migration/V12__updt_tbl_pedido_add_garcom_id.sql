@@ -1,8 +1,8 @@
 
 ALTER TABLE tb_pedido
-ADD COLUMN garcom_id BIGINT NULL,
+ADD COLUMN garcom_id UUID NULL,
 ADD CONSTRAINT fk_pedido_garcom
-    FOREIGN KEY (garcom_id) REFERENCES tb_garcom(id);
+    FOREIGN KEY (garcom_id) REFERENCES tb_users(id);
 
 -- ADICIONANDO NA FUNCION
 
@@ -21,7 +21,7 @@ DECLARE
     varclienteId tb_cliente.id%type;
     quiosqueId tb_quiosque.id%type;
     mesaId tb_mesa.id%type;
-    garcomId tb_garcom.id%type;
+    garcomId tb_users.id%type;
     precoUnit tb_item_cardapio.preco%type;
     item item_pedido_type;
 BEGIN
@@ -41,7 +41,7 @@ BEGIN
       INTO
       mesaId,garcomId
     FROM tb_mesa me
-    INNER join tb_garcom ga ON ga.id = me.garcom_id
+    INNER join tb_users ga ON ga.id = me.garcom_id
     WHERE me.numero = mesa_in AND me.quiosque_id = quiosque_in;
 
     IF quiosqueId IS NULL OR mesaId IS NULL THEN

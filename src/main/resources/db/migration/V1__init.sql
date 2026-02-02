@@ -32,26 +32,17 @@ CREATE TABLE tb_users_roles (
     PRIMARY KEY (user_id, role_id)
 );
 
--- Tabela Garçom
-CREATE TABLE tb_garcom (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    nome VARCHAR(100) NOT NULL,
-    cpf VARCHAR(11) NOT NULL,
-    quiosque_id UUID,
-    CONSTRAINT fk_garcom_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id)
-);
-
 -- Tabela Mesa
 CREATE TABLE tb_mesa (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     numero INT NOT NULL,
     status VARCHAR(15) NOT NULL,
-    garcom_id BIGINT,
+    garcom_id UUID,
     quiosque_id UUID,
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
 	  UNIQUE(numero,quiosque_id),
     CONSTRAINT fk_mesa_quiosque FOREIGN KEY (quiosque_id) REFERENCES tb_quiosque(id),
-    CONSTRAINT fk_mesa_garcom FOREIGN KEY (garcom_id) REFERENCES tb_garcom(id)
+    CONSTRAINT fk_mesa_garcom FOREIGN KEY (garcom_id) REFERENCES tb_users(id)
 );
 
 -- Tabela Pedido

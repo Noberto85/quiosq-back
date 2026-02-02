@@ -2,11 +2,9 @@ package com.webone.quiosq.service;
 
 
 import com.webone.quiosq.controller.request.PedidoRequest;
-import com.webone.quiosq.controller.response.GarcomResponse;
 import com.webone.quiosq.controller.response.PedidoResponse;
 import com.webone.quiosq.dto.PagamentoResponse;
 import com.webone.quiosq.dto.PageableDto;
-import com.webone.quiosq.entity.Garcom;
 import com.webone.quiosq.entity.Pedido;
 import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import java.util.List;

@@ -42,9 +42,9 @@ public class Mesa {
     private Boolean ativo;
 
     @ManyToOne
-    @JoinColumn(name = "garcom_id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private Garcom garcom;
+    private User garcom;
 
     @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference

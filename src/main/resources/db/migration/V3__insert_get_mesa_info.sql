@@ -14,7 +14,7 @@ BEGIN
         q.nome AS quiosque_nome,
         m.numero AS mesa_numero
     FROM tb_mesa m
-    JOIN tb_garcom g ON m.garcom_id = g.id
+    JOIN tb_users g ON m.garcom_id = g.id
     JOIN tb_quiosque q ON m.quiosque_id = q.id
     WHERE m.quiosque_id = p_quiosque_id
       AND m.id = p_mesa_id;

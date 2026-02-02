@@ -1,7 +1,7 @@
 package com.webone.quiosq.repository;
 
-import com.webone.quiosq.entity.Garcom;
 import com.webone.quiosq.entity.Mesa;
+import com.webone.quiosq.entity.User;
 import com.webone.quiosq.projection.MesaInfoProjection;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public interface MesaRepository extends JpaRepository<Mesa, Long>,
     @Query("SELECT m.id FROM Mesa m INNER JOIN m.quiosque qui WHERE  m.numero =:numero and qui.id =:quiosqueId ")
     Optional<Long> getID(@Param("quiosqueId") UUID quiosqueId, @Param("numero") Integer numero);
 
-    List<Mesa> findByGarcom(Garcom garcom);
+    List<Mesa> findByGarcom(User garcom);
 
     @Query("SELECT m FROM Mesa m JOIN m.quiosque qui WHERE  m.numero =:numero and qui.id =:quiosqueId ")
     Optional<Mesa> findByNumeroAndQuiosque(@Param("quiosqueId") UUID quiosqueId,

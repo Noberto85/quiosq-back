@@ -1,8 +1,8 @@
 package com.webone.quiosq.controller.response;
 
 
-import com.webone.quiosq.entity.Garcom;
 import com.webone.quiosq.entity.Mesa;
+import com.webone.quiosq.entity.User;
 import java.util.Optional;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class MesaResponse {
         this.id = mesa.getId();
         this.numero = mesa.getNumero();
         this.garcom = Optional.ofNullable(mesa.getGarcom())
-            .map(Garcom::getNome)
+            .map(User::getNome)
             .orElse(null);
 
     }

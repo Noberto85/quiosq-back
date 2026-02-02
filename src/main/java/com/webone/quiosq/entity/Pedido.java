@@ -1,5 +1,6 @@
 package com.webone.quiosq.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.webone.quiosq.entity.enums.StatusPedidoEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,8 +52,9 @@ public class Pedido {
     private Quiosque quiosque;
 
     @ManyToOne
-    @JoinColumn(name = "garcom_id")
-    private Garcom garcom;
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User garcom;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
