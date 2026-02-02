@@ -7,6 +7,4 @@ public record LoginFuncionarioDto(
     @NotNull String login,
     @NotNull String password
 
-) {
-
-}
+) { }

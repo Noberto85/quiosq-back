@@ -3,6 +3,7 @@ package com.webone.quiosq.controller;
 import com.webone.quiosq.controller.request.ValidateToken;
 import com.webone.quiosq.controller.response.IdentifcacaoResponse;
 import com.webone.quiosq.dto.LoginClienteDto;
+import com.webone.quiosq.dto.LoginFuncionarioDto;
 import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
 import com.webone.quiosq.service.AuthService;
@@ -38,6 +39,12 @@ public class AuthController {
     @PostMapping("/cliente")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateCliente(
         @RequestBody LoginClienteDto request) {
+        return new ResponseEntity<>(authService.authenticate(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/funcionario")
+    public ResponseEntity<RecoveryJwtTokenDto> authenticateFuncionario(
+        @RequestBody LoginFuncionarioDto request) {
         return new ResponseEntity<>(authService.authenticate(request), HttpStatus.OK);
     }
 

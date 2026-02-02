@@ -18,11 +18,15 @@ CREATE TABLE tb_roles (
 -- Tabela de usuários
 CREATE TABLE tb_users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE,
     nome VARCHAR(100),
+    telefone VARCHAR(11),
+    cpf VARCHAR(11),
     image BYTEA,
     password VARCHAR(200) NOT NULL,
-    quiosque_id UUID REFERENCES tb_quiosque(id) ON DELETE SET NULL
+    quiosque_id UUID REFERENCES tb_quiosque(id) ON DELETE SET NULL,
+    active BOOLEAN NOT NULL,
+    UNIQUE(cpf,quiosque_id,telefone)
 );
 
 -- Tabela de relacionamento ManyToMany entre users e roles

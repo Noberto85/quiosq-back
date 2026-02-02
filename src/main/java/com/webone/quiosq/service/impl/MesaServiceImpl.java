@@ -9,15 +9,20 @@ import com.webone.quiosq.controller.response.QrCodeGeneratePDFDto;
 import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Mesa;
+import com.webone.quiosq.entity.Quiosque;
 import com.webone.quiosq.entity.User;
 import com.webone.quiosq.entity.enums.StatusMesaEnum;
+import com.webone.quiosq.exception.CodeErro.GeralError;
 import com.webone.quiosq.exception.CodeErro.MesaError;
 import com.webone.quiosq.exception.CodeErro.QuiosqueError;
+import com.webone.quiosq.exception.GarcomException;
 import com.webone.quiosq.exception.MesaException;
 import com.webone.quiosq.exception.NotFoundException;
+import com.webone.quiosq.exception.QuiosqueException;
 import com.webone.quiosq.projection.MesaInfoProjection;
 import com.webone.quiosq.repository.MesaRepository;
 import com.webone.quiosq.repository.QuiosqueRepository;
+import com.webone.quiosq.repository.UserRepository;
 import com.webone.quiosq.service.JasperReportService;
 import com.webone.quiosq.service.MesaService;
 import com.webone.quiosq.service.QrCodeService;
@@ -36,6 +41,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MesaServiceImpl implements MesaService {
 
+    private final UserRepository userRepository;
     private final MesaRepository mesaRepository;
     private final QuiosqueRepository quiosqueRepository;
     private final QrCodeService qrCodeService;
@@ -82,11 +88,11 @@ public class MesaServiceImpl implements MesaService {
     public void create(MesaRequest request, UUID quiosqueID) {
         final Optional<Mesa> mesaOpt = mesaRepository.findByNumeroAndQuiosque(
             quiosqueID, request.getNumero());
-        /*if (mesaOpt.isPresent() && mesaOpt.get().getAtivo()) {
+       if (mesaOpt.isPresent() && mesaOpt.get().getAtivo()) {
             throw new MesaException(MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro(),
                 request.getNumero());
         }
-        var garcomOpt = repository.findById(request.getGarcomId());
+        var garcomOpt = userRepository.findById(request.getGarcomId());
         if (garcomOpt.isEmpty()) {
             throw new GarcomException(GeralError.NAO_ENCONTRADO.getCodeErro());
         }
@@ -110,21 +116,21 @@ public class MesaServiceImpl implements MesaService {
                 .quiosque(quiosque)
                 .build();
             mesaRepository.save(mesa);
-        }*/
+        }
 
     }
 
     @Override
     public void update(MesaRequest request) {
-       /* var mesa = mesaRepository.findById(request.getId())
+        var mesa = mesaRepository.findById(request.getId())
             .orElseThrow(() -> new MesaException(
                 MesaError.NUMERO_CADASTRADO_ERROR.getCodeErro(), request.getNumero()));
-        var garcomOpt = repository.findById(request.getGarcomId());
+        var garcomOpt = userRepository.findById(request.getGarcomId());
         if (garcomOpt.isEmpty()) {
             throw new GarcomException(GeralError.NAO_ENCONTRADO.getCodeErro());
         }
         mesa.setGarcom(garcomOpt.get());
-        mesaRepository.save(mesa);*/
+        mesaRepository.save(mesa);
 
 
     }

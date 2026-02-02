@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new UserDetailsImpl(user.get());
         }
 
-        var func = userRepository.findByCpf(username);
+        var func = userRepository.findByCpfAndActive(username, true);
         if (func.isPresent()) {
             return new UserDetailsImpl(func.get());
         }

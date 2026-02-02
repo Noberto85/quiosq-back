@@ -109,6 +109,8 @@ public class CodeErro {
     @Getter
     public enum NaoAutorizadoError {
         SUSPEITA_FRAUDE_ERROR(new CodeErro(-7001, "Suspeita de fraude", Constants.SEM_DETALHES,
+            HttpStatus.UNAUTHORIZED)),
+        ROLE_NAO_AUTORIZADO(new CodeErro(-7002    , "Role não autorizado", Constants.SEM_DETALHES,
             HttpStatus.UNAUTHORIZED));
 
         private final CodeErro codeErro;
@@ -172,6 +174,19 @@ public class CodeErro {
         private final CodeErro codeErro;
 
         ClienteError(CodeErro codeErro) {
+            this.codeErro = codeErro;
+        }
+    }
+
+    @Getter
+    public enum UserError {
+        USUARIO_JA_CADASTRADO(
+            new CodeErro(-13001, "Usuário já cadastrado.", Constants.SEM_DETALHES,
+                HttpStatus.CONFLICT));
+
+        private final CodeErro codeErro;
+
+        UserError(CodeErro codeErro) {
             this.codeErro = codeErro;
         }
     }

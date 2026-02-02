@@ -52,7 +52,7 @@ public class Pedido {
     private Quiosque quiosque;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "garcom_id")
     @JsonBackReference
     private User garcom;
 

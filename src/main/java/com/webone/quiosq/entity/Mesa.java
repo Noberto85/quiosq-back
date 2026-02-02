@@ -42,7 +42,7 @@ public class Mesa {
     private Boolean ativo;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "garcom_id")
     @JsonBackReference
     private User garcom;
 
