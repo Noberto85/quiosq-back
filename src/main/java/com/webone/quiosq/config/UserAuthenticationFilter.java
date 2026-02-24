@@ -2,6 +2,7 @@ package com.webone.quiosq.config;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.webone.quiosq.dto.JwtPayload;
+import com.webone.quiosq.entity.enums.RoleName;
 import com.webone.quiosq.exception.UnauthorizedException;
 import com.webone.quiosq.repository.UserRepository;
 import com.webone.quiosq.service.impl.UserDetailsImpl;
@@ -45,7 +46,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
                 JwtPayload subject = jwtTokenService.parse(
                     token);
-                if (Objects.isNull(subject.getRole())) {
+                if (subject.getRole().equals(RoleName.ROLE_ADMIN.name())||subject.getRole().equals(RoleName.ROLE_SYSTEM_ADMIN.name())) {
                     var user = userRepository.findByEmail(subject.getSubject());
 
                     if (user.isEmpty()) {
@@ -58,7 +59,20 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                     autentication(userDetails.getUsername(), userDetails.getAuthorities());
                 }
 
-                if (Objects.nonNull(subject.getRole())) {
+                if (subject.getRole().equals(RoleName.ROLE_GARCOM.name())) {
+                    var user = userRepository.findByCpfAndActive(subject.getSubject(),true);
+
+                    if (user.isEmpty()) {
+                        throw new UnauthorizedException("Unauthorizad");
+                    }
+
+                    UserDetailsImpl userDetails = UserDetailsImpl.builder().user(user.get())
+                        .build();
+
+                    autentication(userDetails.getUsername(), userDetails.getAuthorities());
+                }
+
+                if (subject.getRole().equals(RoleName.ROLE_CLIENTE.name())) {
 
                     autentication(subject.getSubject(),
                         Collections.singleton(new SimpleGrantedAuthority(subject.getRole()))

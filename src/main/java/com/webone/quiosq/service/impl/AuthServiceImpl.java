@@ -10,17 +10,22 @@ import com.webone.quiosq.dto.LoginUserDto;
 import com.webone.quiosq.dto.MesaProjectionDto;
 import com.webone.quiosq.dto.RecoveryJwtTokenDto;
 import com.webone.quiosq.entity.Cliente;
+import com.webone.quiosq.entity.Quiosque;
 import com.webone.quiosq.exception.ClienteException;
 import com.webone.quiosq.exception.CodeErro.AuthError;
 import com.webone.quiosq.exception.CodeErro.ClienteError;
+import com.webone.quiosq.exception.CodeErro.QuiosqueError;
 import com.webone.quiosq.exception.LoginException;
+import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.itg.SmsService;
 import com.webone.quiosq.repository.ClienteRepository;
+import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.repository.SystemRoleRepository;
 import com.webone.quiosq.service.AuthService;
 import com.webone.quiosq.service.MesaService;
 import com.webone.quiosq.utils.Utils;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -50,12 +55,14 @@ public class AuthServiceImpl implements AuthService {
     private final SmsService smsService;
 
     private final ClienteRepository repository;
+    private final QuiosqueRepository quiosqueRepository;
 
     @Override
     public RecoveryJwtTokenDto authenticate(LoginUserDto loginUserDto) {
         try {
             // Cria um objeto de autenticação com o email e a senha do usuário
-            Authentication authentication = getAuthentication(loginUserDto.email(),loginUserDto.password());
+            Authentication authentication = getAuthentication(loginUserDto.email(),
+                loginUserDto.password());
 
             // Obtém o objeto UserDetails do usuário autenticado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -80,9 +87,11 @@ public class AuthServiceImpl implements AuthService {
     public RecoveryJwtTokenDto authenticate(LoginClienteDto request) {
         try {
 
-            Authentication authentication = getAuthentication(request.telefone(),request.password());
+            Authentication authentication = getAuthentication(request.telefone(),
+                request.password());
 
             ClienteDetailsImpl userDetails = (ClienteDetailsImpl) authentication.getPrincipal();
+            updateQuosque(request, userDetails);
             return new RecoveryJwtTokenDto(
                 jwtTokenService.generateTokenClient(userDetails, request.quiosqueId(),
                     request.mesa(), systemRoleRepository.getTaxa().get()));
@@ -92,11 +101,26 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
+    private void updateQuosque(LoginClienteDto request, ClienteDetailsImpl userDetails) {
+        final Optional<Quiosque> quiosquiOpt = userDetails.getCliente().getQuiosques().stream()
+            .filter(qui -> qui.getId().equals(request.quiosqueId())).findFirst();
+        if (quiosquiOpt.isEmpty()) {
+            var quiosque = quiosqueRepository.findById(request.quiosqueId())
+                .orElseThrow(() -> new NotFoundException(
+                    QuiosqueError.QUIOSQUE_NAO_ENCONTRADO.getCodeErro()));
+            userDetails.getCliente().getQuiosques().add(quiosque);
+        }
+        userDetails.getCliente().setUltimoAcesso(LocalDateTime.now());
+
+        repository.save(userDetails.getCliente());
+    }
+
     @Override
     public RecoveryJwtTokenDto authenticate(LoginFuncionarioDto loginUserDto) {
         try {
             // Cria um objeto de autenticação com o email e a senha do usuário
-            Authentication authentication = getAuthentication(loginUserDto.login(),loginUserDto.password());
+            Authentication authentication = getAuthentication(loginUserDto.login(),
+                loginUserDto.password());
 
             // Obtém o objeto UserDetails do usuário autenticado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

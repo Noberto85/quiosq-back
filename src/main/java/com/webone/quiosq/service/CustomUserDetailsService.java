@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var cliente = clienteRepository.findByTelefone(username);
+            var cliente = clienteRepository.findByTelefone(username);
         if (cliente.isPresent()) {
             return new ClienteDetailsImpl(cliente.get());
         }

@@ -52,8 +52,9 @@ public class FuncionarioAdminController {
             HttpStatus.OK);
     }
 
-    @GetMapping("/{quiosqueId}/pageable")
+    @GetMapping("/{userId}/{quiosqueId}/pageable")
     public ResponseEntity<PageableDto<GarcomResponse>> findAllPageable(
+        @PathVariable("userId") UUID userId,
         @PathVariable("quiosqueId") UUID quiosqueId,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "size", defaultValue = "10") Integer size,
@@ -64,7 +65,7 @@ public class FuncionarioAdminController {
 
         return new ResponseEntity<>(
             service.findAllByPageableSpec(
-                spec.toSpecification(quiosqueId), page, size, orderBy,
+                spec.toSpecification(userId, quiosqueId), page, size, orderBy,
                 direction),
             HttpStatus.OK);
 
@@ -97,6 +98,13 @@ public class FuncionarioAdminController {
     public ResponseEntity<Void> delete(@PathVariable("novoGarcom") UUID novoGarcom,
         @PathVariable("id") UUID id) {
         service.disable(novoGarcom, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFunc(
+        @PathVariable("id") UUID id) {
+        service.disable(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

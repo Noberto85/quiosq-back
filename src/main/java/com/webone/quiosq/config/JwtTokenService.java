@@ -3,7 +3,6 @@ package com.webone.quiosq.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.webone.quiosq.dto.ClientDetails;
 import com.webone.quiosq.dto.JwtPayload;
 import com.webone.quiosq.entity.enums.RoleName;
 import com.webone.quiosq.exception.CodeErro.QuiosqueError;
@@ -21,7 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,9 @@ import org.springframework.stereotype.Service;
 public class JwtTokenService {
 
     private final MesaRepository mesaRepository;
+
     private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
+    private static final String USER_ADMIN_ID = "user_adm_id";
     private static final String ROLES = "Roles";
     private static final String CLIENTE = "CLIENTE";
     private static final String USER_NAME = "user_name";
@@ -54,6 +54,7 @@ public class JwtTokenService {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
                 .withIssuer(ISSUER)
+                .withClaim(USER_ADMIN_ID, userDt.getUser().getId().toString())
                 .withClaim(USER_NAME, userDt.getUser().getNome())
                 .withClaim(QUIOSQUE_ID,
                     Optional.ofNullable(userDt.getUser().getQuiosque())
@@ -79,6 +80,7 @@ public class JwtTokenService {
             .orElseThrow(() -> new NotFoundException(
                 QuiosqueError.MESA_NAO_ENCONTRADO.getCodeErro()));
         try {
+
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
             return JWT.create()
                 .withIssuer(ISSUER)
@@ -134,6 +136,8 @@ public class JwtTokenService {
         }
         if (!roles.contains(RoleName.ROLE_CLIENTE.name())) {
             p.setSubject(claims.get(SUB).asString());
+            p.setRole(roles.get(0));
+
         }
 
         return p;

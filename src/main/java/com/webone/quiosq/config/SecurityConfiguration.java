@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         "/success.html", "/api/webhook/**", "/api/v1/cliente/**",
         "/swagger-ui/**", "/swagger-ui/index.html", "/actuator/**",
         "/v3/api-docs/**", "/api/v1/qrcode/**", "/api/v1/auth/**",
-        "/ws/**"
+        "/ws/**","/api/v1/func/garcom/**"
     };
 
 

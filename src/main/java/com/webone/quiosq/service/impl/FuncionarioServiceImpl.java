@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webone.quiosq.controller.request.FuncionarioCreateRequest;
 import com.webone.quiosq.controller.response.GarcomResponse;
 import com.webone.quiosq.controller.response.GarcomSelectResponse;
+import com.webone.quiosq.controller.response.PedidoResponse;
 import com.webone.quiosq.dto.PageableDto;
 import com.webone.quiosq.entity.Mesa;
+import com.webone.quiosq.entity.Pedido;
 import com.webone.quiosq.entity.User;
 import com.webone.quiosq.entity.enums.RoleName;
 import com.webone.quiosq.exception.CodeErro.GeralError;
@@ -16,7 +18,7 @@ import com.webone.quiosq.exception.CodeErro.UserError;
 import com.webone.quiosq.exception.NaoAutorizadoException;
 import com.webone.quiosq.exception.NotFoundException;
 import com.webone.quiosq.exception.QuiosqueException;
-import com.webone.quiosq.repository.MesaRepository;
+import com.webone.quiosq.repository.PedidoRepository;
 import com.webone.quiosq.repository.QuiosqueRepository;
 import com.webone.quiosq.repository.RoleRepository;
 import com.webone.quiosq.repository.UserRepository;
@@ -44,6 +46,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     private final ObjectMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final MesaService mesaService;
+    private final PedidoRepository pedidoRepository;
 
     @Override
     public void create(FuncionarioCreateRequest request, UUID quiosqueId) {
@@ -98,10 +101,17 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         repository.save(garcom);
     }
 
+    @Override
+    public void disable(UUID id) {
+        var func = findById(id);
+        func.setActive(Boolean.FALSE);
+        repository.save(func);
+    }
+
 
     @Override
     public List<GarcomSelectResponse> findAllNOtEqualsId(UUID quiosqueId, UUID id) {
-        return repository.findAllByOrderByNomeAsc(quiosqueId, id,RoleName.ROLE_GARCOM).stream()
+        return repository.findAllByOrderByNomeAsc(quiosqueId, id, RoleName.ROLE_GARCOM).stream()
             .map(GarcomSelectResponse::new)
             .collect(
                 Collectors.toList());
@@ -132,5 +142,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public User findById(UUID id) {
         return repository.findById(id)
             .orElseThrow(() -> new NotFoundException(GeralError.NAO_ENCONTRADO.getCodeErro()));
+    }
+
+    @Override
+    public List<PedidoResponse> findAllByStatus(Specification<Pedido> spec) {
+       return pedidoRepository.findAll(spec).stream().map(PedidoResponse::new).toList();
+
     }
 }
