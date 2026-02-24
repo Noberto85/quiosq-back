@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: spring-boot-app
+    env: java
+    envVars:
+      - key: REDIS_URL
+        fromDatabase:
+          name: my-redis-instance
+          property: connectionString # Internal rediss:// URL
+    # ... outras configurações do serviço (build, startCommand, etc.)
+
+databases:
+  - name: my-redis-instance
+    type: redis
+    region: ohio # mesma região do serviço web
+    plan: free   # ou outro plano disponível
