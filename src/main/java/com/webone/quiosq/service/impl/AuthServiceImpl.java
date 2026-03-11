@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 @Log4j2
 public class AuthServiceImpl implements AuthService {
 
@@ -56,6 +56,23 @@ public class AuthServiceImpl implements AuthService {
 
     private final ClienteRepository repository;
     private final QuiosqueRepository quiosqueRepository;
+
+    private final String url;
+
+    public AuthServiceImpl(StringRedisTemplate redisTemplate,
+        AuthenticationManager authenticationManager, JwtTokenService jwtTokenService,
+        MesaService mesaService, SystemRoleRepository systemRoleRepository, SmsService smsService,
+        ClienteRepository repository, QuiosqueRepository quiosqueRepository,@Value("${spring.redis.host}") String url) {
+        this.redisTemplate = redisTemplate;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenService = jwtTokenService;
+        this.mesaService = mesaService;
+        this.systemRoleRepository = systemRoleRepository;
+        this.smsService = smsService;
+        this.repository = repository;
+        this.quiosqueRepository = quiosqueRepository;
+        this.url = url;
+    }
 
     @Override
     public RecoveryJwtTokenDto authenticate(LoginUserDto loginUserDto) {
@@ -147,6 +164,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void generateCodigoUsuario(String telefone) {
+            log.info("============ URLREDISSS ======== {}" , url);
         final Optional<Cliente> clienteOpt = repository.findByTelefone(telefone);
         if (clienteOpt.isPresent()) {
             throw new ClienteException(ClienteError.CLIENTE_JA_CADASTRADO.getCodeErro());
